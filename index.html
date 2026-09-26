@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>북마클릿 설치 페이지</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+    .bookmarklet-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007acc;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: move; /* 드래그 아이콘 표시 */
+    }
+  </style>
+</head>
+<body>
+  <h1>나의 북마클릿</h1>
+  <p>아래 버튼을 클릭하지 말고, <strong>브라우저 북마크바(Ctrl+Shift+B)로 드래그 앤 드롭</strong>하세요.</p>
+  
+  <!-- href 내부에 압축된 자바스크립트 코드를 넣습니다 -->
+  <a class="bookmarklet-btn" href="javascript:(function(){const t=document.title,n=window.location.href,o=`[${t}](${n})`;navigator.clipboard.writeText(o).then(()=>{alert('마크다운 링크가 클립보드에 복사되었습니다!\n'+o)}).catch(t=>{alert('복사 실패: '+t)})();">
+    MD 링크 복사기
+  </a>
+</body>
+</html>
