@@ -1,9 +1,10 @@
 (async () => {
   'use strict';
 
-  const APP_VERSION = 'v0.9';
-  const APP_TITLE = `Search RC Vehicle ${APP_VERSION}`;
+  const APP_VERSION = 'v1.4';
+  const APP_TITLE = `LOAD Vehicle Summary · Jace ${APP_VERSION}`;
   const DEFAULT_TO_CENTER_CODE = 'DON1CFC';
+  const FIXED_TARGET_CENTERS = ['DON1', 'DON1CFC'];
   const DEFAULT_RANGE_DAYS = 3;
   const STATUS_LOAD = 'LOAD';
   const SEARCH_DATE_TYPE = 'UPLOAD_COMPLETED_DATE';
@@ -15,7 +16,6 @@
   const STYLE_ID = 'grab-load-vehicle-style';
   const RUN_KEY = '__grabLoadVehicleRunId';
   const ABORT_KEY = '__grabLoadVehicleAbortController';
-  const SNAPSHOT_KEY_PREFIX = 'grab-load-vehicle:previous:v1';
 
   const QUICK_RANGES = [
     { value: '1', label: '오늘', days: 1 },
@@ -25,56 +25,7 @@
     { value: '5', label: '5일', days: 5 }
   ];
 
-  const TO_CENTER_OPTIONS = ['DON1CFC', 'DON1'];
-
-  const RESULT_FONT_LEVELS = [
-    {
-      label: '작게',
-      groupFontSize: 13,
-      vehicleFontSize: 13,
-      countFontSize: 12,
-      vehicleMinWidth: 44,
-      groupPadding: '8px',
-      groupGap: '8px',
-      vehicleGap: '5px',
-      vehiclePadding: '2px 0'
-    },
-    {
-      label: '기본',
-      groupFontSize: 14,
-      vehicleFontSize: 15,
-      countFontSize: 13,
-      vehicleMinWidth: 50,
-      groupPadding: '10px',
-      groupGap: '10px',
-      vehicleGap: '6px',
-      vehiclePadding: '2px 0'
-    },
-    {
-      label: '크게',
-      groupFontSize: 16,
-      vehicleFontSize: 18,
-      countFontSize: 14,
-      vehicleMinWidth: 58,
-      groupPadding: '12px',
-      groupGap: '12px',
-      vehicleGap: '8px',
-      vehiclePadding: '3px 0'
-    },
-    {
-      label: '매우 크게',
-      groupFontSize: 18,
-      vehicleFontSize: 22,
-      countFontSize: 15,
-      vehicleMinWidth: 70,
-      groupPadding: '14px',
-      groupGap: '14px',
-      vehicleGap: '10px',
-      vehiclePadding: '4px 0'
-    }
-  ];
-
-  const DEFAULT_RESULT_FONT_LEVEL = 1;
+  // const TO_CENTER_OPTIONS = ['DON1CFC', 'DON1'];
 
   const clean = (text) =>
     (text || '')
@@ -330,11 +281,8 @@
       </div>
       <div class="glv-row">
         <div>
-          <label for="glv-to-center">받는센터</label>
-          <input id="glv-to-center" list="glv-to-center-list" value="${DEFAULT_TO_CENTER_CODE}" autocomplete="off" />
-          <datalist id="glv-to-center-list">
-            ${TO_CENTER_OPTIONS.map(code => `<option value="${escapeHtml(code)}"></option>`).join('')}
-          </datalist>
+          <label for="glv-vehicle-number">차량번호</label>
+          <input id="glv-vehicle-number" placeholder="4자리 차량번호 입력" autocomplete="off" />
         </div>
         <div>
           <label for="glv-range">기간</label>
@@ -350,12 +298,10 @@
       <div class="glv-actions">
         <button type="button" class="glv-primary" id="glv-search">조회</button>
         <button type="button" class="glv-secondary" id="glv-stop" disabled>중지</button>
-        <button type="button" class="glv-secondary" id="glv-size-down" title="결과 글자 작게">A-</button>
-        <button type="button" class="glv-secondary" id="glv-size-up" title="결과 글자 크게">A+</button>
         <button type="button" class="glv-secondary" id="glv-copy-group" disabled>그룹 복사</button>
         <button type="button" class="glv-secondary" id="glv-copy-excel" disabled>엑셀용 복사</button>
       </div>
-      <div class="glv-status" id="glv-status">받는센터 선택 후 조회하세요.</div>
+      <div class="glv-status" id="glv-status">차량번호 입력 후 조회하세요.</div>
       <div class="glv-summary" id="glv-summary"></div>
       <div id="glv-result"></div>
     `;
@@ -364,12 +310,11 @@
 
     return {
       panel,
-      toCenterInput: panel.querySelector('#glv-to-center'),
+      // toCenterInput: panel.querySelector('#glv-to-center'),
+      vehicleNumberInput: panel.querySelector('#glv-vehicle-number'),
       rangeSelect: panel.querySelector('#glv-range'),
       searchButton: panel.querySelector('#glv-search'),
       stopButton: panel.querySelector('#glv-stop'),
-      sizeDownButton: panel.querySelector('#glv-size-down'),
-      sizeUpButton: panel.querySelector('#glv-size-up'),
       copyGroupButton: panel.querySelector('#glv-copy-group'),
       copyExcelButton: panel.querySelector('#glv-copy-excel'),
       status: panel.querySelector('#glv-status'),
@@ -377,35 +322,6 @@
       result: panel.querySelector('#glv-result'),
       closeButton: panel.querySelector('.glv-close')
     };
-  };
-
-  let resultFontLevelIndex = DEFAULT_RESULT_FONT_LEVEL;
-
-  const applyResultFontLevel = (ui, levelIndex) => {
-    const nextIndex = Math.max(0, Math.min(levelIndex, RESULT_FONT_LEVELS.length - 1));
-    const level = RESULT_FONT_LEVELS[nextIndex];
-
-    resultFontLevelIndex = nextIndex;
-
-    ui.panel.style.setProperty('--glv-group-font-size', `${level.groupFontSize}px`);
-    ui.panel.style.setProperty('--glv-vehicle-font-size', `${level.vehicleFontSize}px`);
-    ui.panel.style.setProperty('--glv-count-font-size', `${level.countFontSize}px`);
-    ui.panel.style.setProperty('--glv-vehicle-min-width', `${level.vehicleMinWidth}px`);
-    ui.panel.style.setProperty('--glv-group-padding', level.groupPadding);
-    ui.panel.style.setProperty('--glv-group-gap', level.groupGap);
-    ui.panel.style.setProperty('--glv-vehicle-gap', level.vehicleGap);
-    ui.panel.style.setProperty('--glv-vehicle-padding', level.vehiclePadding);
-    ui.sizeDownButton.disabled = nextIndex === 0;
-    ui.sizeUpButton.disabled = nextIndex === RESULT_FONT_LEVELS.length - 1;
-    ui.panel.dataset.resultFontSize = level.label;
-  };
-
-  const fitResultFontToPanel = (ui) => {
-    requestAnimationFrame(() => {
-      while (resultFontLevelIndex > 0 && ui.panel.scrollHeight > ui.panel.clientHeight + 2) {
-        applyResultFontLevel(ui, resultFontLevelIndex - 1);
-      }
-    });
   };
 
   const setStatus = (ui, message) => {
@@ -418,7 +334,7 @@
     ui.searchButton.textContent = isBusy ? '조회 중...' : '조회';
   };
 
-  const buildListUrl = ({ pageNo, toCenterCode, startDate, endDate }) => {
+  const buildListUrl = ({ pageNo, toCenterCode, vehicleNumber, startDate, endDate }) => {
     const url = new URL('/transfer/admin/operation/paging', location.origin);
 
     url.searchParams.set('page', String(pageNo));
@@ -426,7 +342,7 @@
     url.searchParams.set('skuBarcode', '');
     url.searchParams.set('skuExternalId', '');
     url.searchParams.set('skuId', '');
-    url.searchParams.set('vehicleNumber', '');
+    url.searchParams.set('vehicleNumber', vehicleNumber);
     url.searchParams.set('status', STATUS_LOAD);
     url.searchParams.set('containerBarcode', '');
     url.searchParams.set('transferCartPriority', '');
@@ -475,20 +391,23 @@
     let targetTable = null;
     let fromCenterIndex = -1;
     let vehicleNumberIndex = -1;
-    let loadedAtIndex = -1;
+    let containerBarcodeIndex = -1;
+    let toteBarcodeIndex = -1;
 
     tables.some(tbl => {
       const headers = [...tbl.querySelectorAll('thead th')].map(th => clean(th.innerText || th.textContent));
-      const fromIndex = headers.findIndex(header => header.includes('보내는') && header.includes('센터'));
-      const vehicleIndex = headers.findIndex(header => header.replace(/\s/g, '').includes('차량번호'));
-      const loadedIndex = headers.findIndex(header => header.replace(/\s/g, '').includes('상차완료시간'));
+      const fromCenterIdx = headers.findIndex(header => header.replace(/\s/g, '').includes('보내는센터'));
+      const vehicleNumberIdx = headers.findIndex(header => header.replace(/\s/g, '').includes('차량번호'));
+      const containerBarcodeIdx = headers.findIndex(header => header.replace(/\s/g, '').includes('컨테이너바코드'));
+      const toteBarcodeIdx = headers.findIndex(header => header.replace(/\s/g, '').includes('토트바코드'));
 
-      if (fromIndex < 0 || vehicleIndex < 0) return false;
+      if (fromCenterIdx < 0 || vehicleNumberIdx < 0) return false;
 
       targetTable = tbl;
-      fromCenterIndex = fromIndex;
-      vehicleNumberIndex = vehicleIndex;
-      loadedAtIndex = loadedIndex;
+      fromCenterIndex = fromCenterIdx;
+      vehicleNumberIndex = vehicleNumberIdx;
+      containerBarcodeIndex = containerBarcodeIdx;
+      toteBarcodeIndex = toteBarcodeIdx;
       return true;
     });
 
@@ -500,51 +419,21 @@
 
         if (cells.length === 1 && cells[0].hasAttribute('colspan')) return null;
 
-        const loadedAtText = loadedAtIndex >= 0
-          ? clean(cells[loadedAtIndex]?.innerText || cells[loadedAtIndex]?.textContent)
-          : '';
-
         return {
           fromCenter: clean(cells[fromCenterIndex]?.innerText || cells[fromCenterIndex]?.textContent),
-          vehicleNumber: extractVehicleNumber(cells[vehicleNumberIndex]?.innerText || cells[vehicleNumberIndex]?.textContent),
-          loadedAtTime: parseDateTimeValue(loadedAtText),
+          vehicleNumber: clean(cells[vehicleNumberIndex]?.innerText || cells[vehicleNumberIndex]?.textContent),
+          containerBarcode: clean(cells[containerBarcodeIndex]?.innerText || cells[containerBarcodeIndex]?.textContent),
+          toteBarcode: clean(cells[toteBarcodeIndex]?.innerText || cells[toteBarcodeIndex]?.textContent),
           rowSignature: clean(tr.innerText || tr.textContent)
         };
       })
       .filter(Boolean);
   };
 
-  const extractVehicleNumber = (text) => {
-    const value = clean(text);
-    const match = value.match(/\d{4}/);
-    return match ? match[0] : '';
-  };
+  const makeRowKey = (row) => row.rowSignature || `${row.fromCenter}|${row.vehicleNumber}|${row.containerBarcode}|${row.toteBarcode}`;
 
-  const parseDateTimeValue = (text) => {
-    const match = clean(text).match(/(\d{4})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})(?::(\d{2}))?/);
-
-    if (!match) return Number.MAX_SAFE_INTEGER;
-
-    const [, yyyy, mm, dd, hh, mi, ss = '0'] = match;
-
-    return new Date(
-      Number(yyyy),
-      Number(mm) - 1,
-      Number(dd),
-      Number(hh),
-      Number(mi),
-      Number(ss)
-    ).getTime();
-  };
-
-  const normalizeCenterCode = (centerCode) => clean(centerCode).replace(/\s+/g, '').toUpperCase();
-
-  const shouldExcludeFromCenter = (fromCenter) => normalizeCenterCode(fromCenter) === 'DON1';
-
-  const makeRowKey = (row) => row.rowSignature || `${row.fromCenter}|${row.vehicleNumber}`;
-
-  const fetchPageRows = async ({ pageNo, toCenterCode, startDate, endDate, signal }) => {
-    const url = buildListUrl({ pageNo, toCenterCode, startDate, endDate });
+  const fetchPageRows = async ({ pageNo, toCenterCode, vehicleNumber, startDate, endDate, signal }) => {
+    const url = buildListUrl({ pageNo, toCenterCode, vehicleNumber, startDate, endDate });
     console.log(`[${APP_TITLE}] page=${pageNo}`, url);
 
     const html = await fetchHtml(url, signal);
@@ -555,7 +444,7 @@
     };
   };
 
-  const collectRows = async ({ ui, runId, toCenterCode, startDate, endDate, signal, onProgress }) => {
+  const collectRows = async ({ ui, runId, toCenterCode, vehicleNumber, startDate, endDate, signal }) => {
     const rows = [];
     const seenPages = new Set();
 
@@ -573,7 +462,7 @@
 
       const batchResults = await Promise.all(
         batchPages.map(currentPageNo =>
-          fetchPageRows({ pageNo: currentPageNo, toCenterCode, startDate, endDate, signal })
+          fetchPageRows({ pageNo: currentPageNo, toCenterCode, vehicleNumber, startDate, endDate, signal })
         )
       );
 
@@ -592,7 +481,6 @@
         seenPages.add(signature);
 
         rows.push(...pageRows);
-        onProgress?.(rows);
 
         if (pageRows.length < PAGE_SIZE) return rows;
       }
@@ -601,170 +489,106 @@
     return rows;
   };
 
-  const groupRows = (rows) => {
-    const groups = new Map();
+  const groupBarcodesByCenter = (rows) => {
+    const fromCenterMap = new Map();
 
     rows.forEach(row => {
       const fromCenter = row.fromCenter;
       const vehicleNumber = row.vehicleNumber;
+      const containerBarcode = row.containerBarcode || row.toteBarcode;  // 컨테이너 바코드가 없으면 토트 바코드를 사용
 
-      if (!fromCenter || !vehicleNumber) return;
-      if (shouldExcludeFromCenter(fromCenter)) return;
+      if (!fromCenter || !vehicleNumber || !containerBarcode) return;
 
-      if (!groups.has(fromCenter)) {
-        groups.set(fromCenter, new Map());
+      if (!fromCenterMap.has(fromCenter)) {
+        fromCenterMap.set(fromCenter, []);
       }
 
-      const vehicleMap = groups.get(fromCenter);
-      const loadedAtTime = row.loadedAtTime ?? Number.MAX_SAFE_INTEGER;
-      const currentVehicle = vehicleMap.get(vehicleNumber);
+      const barcodeData = fromCenterMap.get(fromCenter);
 
-      if (!currentVehicle || loadedAtTime < currentVehicle.loadedAtTime) {
-        vehicleMap.set(vehicleNumber, {
-          vehicleNumber,
-          loadedAtTime
+      const existingData = barcodeData.find(b => b.containerBarcode === containerBarcode);
+      if (existingData) {
+        existingData.rowCount += 1;
+      } else {
+        barcodeData.push({
+          fromCenter: fromCenter,
+          vehicleNumber: vehicleNumber,
+          containerBarcode: containerBarcode,
+          rowCount: 1
         });
       }
     });
 
-    return [...groups.entries()]
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([fromCenter, vehicleMap]) => ({
-        fromCenter,
-        vehicles: [...vehicleMap.values()]
-          .sort((a, b) =>
-            a.loadedAtTime - b.loadedAtTime ||
-            a.vehicleNumber.localeCompare(b.vehicleNumber)
-          )
-          .map(vehicle => vehicle.vehicleNumber)
-      }));
-  };
-
-  const makeVehicleKey = (fromCenter, vehicleNumber) =>
-    `${normalizeCenterCode(fromCenter)}|${clean(vehicleNumber)}`;
-
-  const getSnapshotKey = (toCenterCode, rangeDays) =>
-    `${SNAPSHOT_KEY_PREFIX}:${STATUS_LOAD}:${normalizeCenterCode(toCenterCode)}:${rangeDays}`;
-
-  const loadVehicleSnapshot = (toCenterCode, rangeDays) => {
-    try {
-      const saved = localStorage.getItem(getSnapshotKey(toCenterCode, rangeDays));
-      if (!saved) return null;
-
-      const snapshot = JSON.parse(saved);
-
-      if (Array.isArray(snapshot)) {
-        return {
-          vehicleKeys: new Set(snapshot),
-          groups: null,
-          sourceRowsLength: 0,
-          savedAt: ''
-        };
-      }
-
-      if (!snapshot || !Array.isArray(snapshot.vehicleKeys)) return null;
-
-      return {
-        vehicleKeys: new Set(snapshot.vehicleKeys),
-        groups: Array.isArray(snapshot.groups) ? snapshot.groups : null,
-        sourceRowsLength: Number(snapshot.sourceRowsLength) || 0,
-        savedAt: snapshot.savedAt || ''
-      };
-    } catch (error) {
-      console.warn(`[${APP_TITLE}] 이전 조회 결과를 불러오지 못했습니다.`, error);
-      return null;
+    for (const [fromCenter, barcodeData] of fromCenterMap.entries()) {
+      barcodeData.sort((a, b) => b.rowCount - a.rowCount);
     }
+
+    return fromCenterMap;
   };
 
-  const saveVehicleSnapshot = (toCenterCode, rangeDays, groups, sourceRowsLength) => {
-    const vehicleKeys = groups.flatMap(group =>
-      group.vehicles.map(vehicle => makeVehicleKey(group.fromCenter, vehicle))
-    );
+  const renderGroups = (ui, groups, resultBarcodeCnt) => {
+    ui.copyGroupButton.disabled = !resultBarcodeCnt;
+    ui.copyExcelButton.disabled = !resultBarcodeCnt;
 
-    try {
-      localStorage.setItem(
-        getSnapshotKey(toCenterCode, rangeDays),
-        JSON.stringify({
-          vehicleKeys,
-          groups,
-          sourceRowsLength,
-          savedAt: new Date().toISOString()
-        })
-      );
-    } catch (error) {
-      console.warn(`[${APP_TITLE}] 현재 조회 결과를 저장하지 못했습니다.`, error);
+    // 1. 상단 요약 텍스트 출력
+    // 전체 고정 센터 중 데이터가 존재하는 받는센터의 개수를 구합니다.
+    let activeToCenterCount = 0;
+    for (const fromCenterMap of toCenterRowsMap.values()) {
+      if (fromCenterMap.size > 0) activeToCenterCount++;
     }
-  };
 
-  const getNewVehicleKeys = (groups, previousVehicleKeys) => {
-    if (previousVehicleKeys === null) return new Set();
-
-    return new Set(
-      groups.flatMap(group =>
-        group.vehicles
-          .map(vehicle => makeVehicleKey(group.fromCenter, vehicle))
-          .filter(vehicleKey => !previousVehicleKeys.has(vehicleKey))
-      )
-    );
-  };
-
-  const formatSnapshotTime = (savedAt) => {
-    const savedDate = new Date(savedAt);
-    if (Number.isNaN(savedDate.getTime())) return '';
-
-    const now = new Date();
-    const hh = String(savedDate.getHours()).padStart(2, '0');
-    const mm = String(savedDate.getMinutes()).padStart(2, '0');
-    const isToday =
-      savedDate.getFullYear() === now.getFullYear() &&
-      savedDate.getMonth() === now.getMonth() &&
-      savedDate.getDate() === now.getDate();
-
-    if (isToday) return `${hh}:${mm}`;
-
-    return `${savedDate.getMonth() + 1}/${savedDate.getDate()} ${hh}:${mm}`;
-  };
-
-  const renderGroups = (ui, groups, sourceRowsLength, newVehicleKeys = new Set()) => {
-    const vehicleCount = groups.reduce((sum, group) => sum + group.vehicles.length, 0);
-    const newVehicleCount = newVehicleKeys.size;
-
-    ui.copyGroupButton.disabled = !groups.length;
-    ui.copyExcelButton.disabled = !groups.length;
-
-    ui.summary.textContent = groups.length
-      ? `보내는센터 ${groups.length}개 / 차량 ${vehicleCount}대 / 신규 ${newVehicleCount}대 / 목록 ${sourceRowsLength}건`
+    ui.summary.textContent = resultBarcodeCnt
+      ? `받는센터 ${activeToCenterCount}개 / 목록 ${resultBarcodeCnt}건`
       : '';
 
-    if (!groups.length) {
+    // 2. 데이터가 없을 때 예외 처리
+    if (!resultBarcodeCnt) {
       ui.result.innerHTML = '<div class="glv-empty">이동중 차량 정보가 없습니다.</div>';
       return;
     }
 
-    ui.result.innerHTML = groups.map(group => {
-      const groupNewVehicleCount = group.vehicles.filter(vehicle =>
-        newVehicleKeys.has(makeVehicleKey(group.fromCenter, vehicle))
-      ).length;
+    // 3. 요청하신 트리 구조(받는센터 > 보내는센터 > 바코드)로 HTML 생성
+    let htmlOutput = '';
 
-      return `
-        <div class="glv-group">
-          <div class="glv-group-head">
-            <span>${escapeHtml(group.fromCenter)}</span>
-            <span class="glv-count">
-              ${group.vehicles.length}대${groupNewVehicleCount ? ` · 신규 ${groupNewVehicleCount}대` : ''}
-            </span>
+    for (const [toCenterCode, fromCenterMap] of toCenterRowsMap.entries()) {
+      // 해당 받는센터에 데이터가 없으면 패스
+      if (fromCenterMap.size === 0) continue;
+
+      htmlOutput += `
+        <div class="glv-to-center-block" style="margin-bottom: 20px;">
+          <!-- [1계층] 받는센터명 -->
+          <div class="glv-to-center-title" style="font-weight: bold; font-size: 15px; color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 4px; margin-bottom: 10px;">
+            ${escapeHtml(toCenterCode)}
           </div>
-          <div class="glv-vehicles">
-            ${group.vehicles.map(vehicle => {
-              const isNew = newVehicleKeys.has(makeVehicleKey(group.fromCenter, vehicle));
-              return `<span class="glv-vehicle${isNew ? ' glv-vehicle-new' : ''}">${escapeHtml(vehicle)}</span>`;
-            }).join('')}
-          </div>
-        </div>
       `;
-    }).join('');
 
-    fitResultFontToPanel(ui);
+      for (const [fromCenter, barcodeList] of fromCenterMap.entries()) {
+        // 해당 보내는센터에 바코드가 없으면 패스
+        if (!barcodeList || barcodeList.length === 0) continue;
+
+        htmlOutput += `
+          <div class="glv-from-center-block" style="margin-left: 20px; margin-bottom: 15px;">
+            <!-- [2계층] 보내는 센터 -->
+            <div class="glv-from-center-title" style="font-weight: bold; font-size: 13px; color: #333; margin-bottom: 6px;">
+              ${escapeHtml(fromCenter)}
+            </div>
+            
+            <!-- [3계층] 컨테이너 바코드 리스트 -->
+            <div class="glv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px;">
+              ${barcodeList.map(item => `
+                <div class="glv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-family: monospace; font-size: 12px; background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">
+                  <span class="glv-barcode-text" style="color: #555;">\${escapeHtml(item.containerBarcode)}</span>
+                  <span class="glv-barcode-count" style="font-weight: bold; color: #e44d26;">\${item.rowCount}건</span>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+
+      htmlOutput += `</div>`; // 받는센터 블록 닫기
+    }
+
+    ui.result.innerHTML = htmlOutput;
   };
 
   const buildGroupText = (groups) =>
@@ -809,45 +633,18 @@
   };
 
   const ui = createPanel();
-  let latestGroups = [];
-  let latestNewVehicleKeys = new Set();
-  let latestSourceRowsLength = 0;
-  let hasDisplayedResult = false;
+  let toCenterRowsMap = new Map();  // 고정 센터들에서 가져온 전체 행 데이터를 저장하는 배열
+  let resultBarcodeCnt = 0;
 
-  const showCachedResult = () => {
-    const toCenterCode = clean(ui.toCenterInput.value).toUpperCase();
-    const rangeDays = Number(ui.rangeSelect.value || DEFAULT_RANGE_DAYS);
-    const snapshot = toCenterCode ? loadVehicleSnapshot(toCenterCode, rangeDays) : null;
-
-    latestGroups = [];
-    latestNewVehicleKeys = new Set();
-    latestSourceRowsLength = 0;
-    hasDisplayedResult = false;
-
-    if (!snapshot || snapshot.groups === null) {
-      ui.summary.textContent = '';
-      ui.result.innerHTML = '';
-      ui.copyGroupButton.disabled = true;
-      ui.copyExcelButton.disabled = true;
-      setStatus(ui, '이전 결과가 없습니다.');
-      return;
-    }
-
-    latestGroups = snapshot.groups;
-    latestSourceRowsLength = snapshot.sourceRowsLength;
-    hasDisplayedResult = true;
-
-    window.grabLoadVehicleVersion = APP_VERSION;
-    window.grabLoadVehicleGroups = latestGroups;
-    window.grabLoadVehicleNewKeys = [];
-
-    renderGroups(ui, latestGroups, latestSourceRowsLength, latestNewVehicleKeys);
-
-    const savedTime = formatSnapshotTime(snapshot.savedAt);
-    setStatus(ui, savedTime ? `이전 결과 · ${savedTime}` : '이전 결과');
+  const clearCurrentResult = () => {
+    toCenterRowsMap = new Map();  // 고정 센터들에서 가져온 전체 행 데이터를 초기화 
+    resultBarcodeCnt = 0;
+    ui.summary.textContent = '';
+    ui.result.innerHTML = '';
+    ui.copyGroupButton.disabled = true;
+    ui.copyExcelButton.disabled = true;
+    setStatus(ui, '차량번호 입력 후 조회하세요.');
   };
-
-  applyResultFontLevel(ui, resultFontLevelIndex);
 
   ui.closeButton.addEventListener('click', removeExistingPanel);
 
@@ -858,35 +655,26 @@
     setBusy(ui, false);
   });
 
-  ui.sizeDownButton.addEventListener('click', () => {
-    applyResultFontLevel(ui, resultFontLevelIndex - 1);
-  });
-
-  ui.sizeUpButton.addEventListener('click', () => {
-    applyResultFontLevel(ui, resultFontLevelIndex + 1);
-    fitResultFontToPanel(ui);
-  });
-
   ui.copyGroupButton.addEventListener('click', async () => {
-    await copyText(buildGroupText(latestGroups));
+    await copyText(buildGroupText(toCenterRowsMap));
     setStatus(ui, '그룹 형식으로 복사했습니다.');
   });
 
   ui.copyExcelButton.addEventListener('click', async () => {
-    await copyText(buildExcelText(latestGroups));
+    await copyText(buildExcelText(toCenterRowsMap));
     setStatus(ui, '엑셀용 형식으로 복사했습니다.');
   });
 
-  ui.toCenterInput.addEventListener('change', showCachedResult);
-  ui.rangeSelect.addEventListener('change', showCachedResult);
+  ui.vehicleNumberInput.addEventListener('change', clearCurrentResult);
+  ui.rangeSelect.addEventListener('change', clearCurrentResult);
 
   ui.searchButton.addEventListener('click', async () => {
-    const toCenterCode = clean(ui.toCenterInput.value).toUpperCase();
+    const vehicleNumber = clean(ui.vehicleNumberInput.value);
     const rangeDays = Number(ui.rangeSelect.value || DEFAULT_RANGE_DAYS);
 
-    if (!toCenterCode) {
-      setStatus(ui, '받는센터를 입력하세요.');
-      ui.toCenterInput.focus();
+    if (!vehicleNumber) {
+      setStatus(ui, '차량번호를 입력하세요.');
+      ui.vehicleNumberInput.focus();
       return;
     }
 
@@ -897,80 +685,51 @@
     window[RUN_KEY] = runId;
     window[ABORT_KEY] = abortController;
 
-    const previousDisplay = {
-      groups: latestGroups,
-      newVehicleKeys: latestNewVehicleKeys,
-      sourceRowsLength: latestSourceRowsLength,
-      hasResult: hasDisplayedResult
-    };
-
-    latestNewVehicleKeys = new Set();
-
-    if (hasDisplayedResult) {
-      renderGroups(ui, latestGroups, latestSourceRowsLength, latestNewVehicleKeys);
-    } else {
-      latestGroups = [];
-      latestSourceRowsLength = 0;
-      ui.summary.textContent = '';
-      ui.result.innerHTML = '';
-      ui.copyGroupButton.disabled = true;
-      ui.copyExcelButton.disabled = true;
-    }
+    toCenterRowsMap = new Map();  // 고정 센터들에서 가져온 전체 행 데이터를 초기화
+    resultBarcodeCnt = 0;
+    ui.summary.textContent = '';
+    ui.result.innerHTML = '';
+    ui.copyGroupButton.disabled = true;
+    ui.copyExcelButton.disabled = true;
 
     setBusy(ui, true);
 
     try {
       const { startDate, endDate } = getDateRange(rangeDays);
-      const previousSnapshot = loadVehicleSnapshot(toCenterCode, rangeDays);
-      const previousVehicleKeys = previousSnapshot?.vehicleKeys ?? null;
 
-      setStatus(ui, `이동중 목록 조회 중 · ${toCenterCode} · ${startDate} ~ ${endDate}`);
-
-      const rows = await collectRows({
-        ui,
-        runId,
-        toCenterCode,
-        startDate,
-        endDate,
-        signal: abortController.signal,
-        onProgress: (currentRows) => {
-          latestGroups = groupRows(currentRows);
-          latestNewVehicleKeys = getNewVehicleKeys(latestGroups, previousVehicleKeys);
-          latestSourceRowsLength = currentRows.length;
-          renderGroups(ui, latestGroups, latestSourceRowsLength, latestNewVehicleKeys);
+      // 센터를 루프돌며 수집
+      for (const toCenterCode of FIXED_TARGET_CENTERS) {
+        setStatus(ui, `이동중 목록 조회 중 · ${toCenterCode} · ${startDate} ~ ${endDate}`);
+        const rows = await collectRows({
+          ui,
+          runId,
+          toCenterCode,
+          vehicleNumber,
+          startDate,
+          endDate,
+          signal: abortController.signal
+        });
+        const groupData = groupBarcodesByCenter(rows);
+        toCenterRowsMap.set(toCenterCode, groupData);
+        for (const barcodeData of groupData.values()) {
+          resultBarcodeCnt += barcodeData.length;
         }
-      });
-      latestGroups = groupRows(rows);
-      latestNewVehicleKeys = getNewVehicleKeys(latestGroups, previousVehicleKeys);
-      latestSourceRowsLength = rows.length;
-      hasDisplayedResult = true;
+      }
 
       window.grabLoadVehicleVersion = APP_VERSION;
-      window.grabLoadVehicleRows = rows;
-      window.grabLoadVehicleGroups = latestGroups;
-      window.grabLoadVehicleNewKeys = [...latestNewVehicleKeys];
+      window.grabLoadVehicleGroups = toCenterRowsMap;
 
-      renderGroups(ui, latestGroups, latestSourceRowsLength, latestNewVehicleKeys);
-      saveVehicleSnapshot(toCenterCode, rangeDays, latestGroups, latestSourceRowsLength);
-      setStatus(ui, latestGroups.length ? '조회 완료' : '조회 완료 · 표시할 차량 정보가 없습니다.');
+      renderGroups(ui, toCenterRowsMap, resultBarcodeCnt);
+      setStatus(ui, resultBarcodeCnt ? '조회 완료' : '조회 완료 · 표시할 차량 정보가 없습니다.');
     } catch (error) {
       if (!isAbortError(error)) {
         console.error(`[${APP_TITLE}]`, error);
       }
 
-      latestGroups = previousDisplay.groups;
-      latestNewVehicleKeys = previousDisplay.newVehicleKeys;
-      latestSourceRowsLength = previousDisplay.sourceRowsLength;
-      hasDisplayedResult = previousDisplay.hasResult;
-
-      if (hasDisplayedResult) {
-        renderGroups(ui, latestGroups, latestSourceRowsLength, latestNewVehicleKeys);
-      } else {
-        ui.summary.textContent = '';
-        ui.result.innerHTML = '';
-        ui.copyGroupButton.disabled = true;
-        ui.copyExcelButton.disabled = true;
-      }
+      ui.summary.textContent = '';
+      ui.result.innerHTML = '';
+      ui.copyGroupButton.disabled = true;
+      ui.copyExcelButton.disabled = true;
 
       setStatus(ui, getFriendlyErrorMessage(error));
     } finally {
@@ -981,5 +740,5 @@
     }
   });
 
-  showCachedResult();
+  clearCurrentResult();
 })();
