@@ -573,7 +573,7 @@
             </div>
             
             <!-- [3계층] 컨테이너 바코드 리스트 -->
-            <div class="glv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px;">
+            <div class="glv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px; background: #f8f9fa" border-radius: "4px">
               ${barcodeList.map(item => `
                 <div class="glv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-family: monospace; font-size: 12px; background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">
                   <span class="glv-barcode-text" style="color: #555;">${escapeHtml(item.containerBarcode)}</span>
