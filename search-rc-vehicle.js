@@ -1,8 +1,8 @@
 (async () => {
   'use strict';
 
-  const APP_VERSION = 'v1.4';
-  const APP_TITLE = `LOAD Vehicle Summary · Jace ${APP_VERSION}`;
+  const APP_VERSION = 'v1.0';
+  const APP_TITLE = `SEARCH RC Vehicle · DUCK02 ${APP_VERSION}`;
   const DEFAULT_TO_CENTER_CODE = 'DON1CFC';
   const FIXED_TARGET_CENTERS = ['DON1', 'DON1CFC'];
   const DEFAULT_RANGE_DAYS = 3;
