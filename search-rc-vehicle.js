@@ -315,8 +315,8 @@
       rangeSelect: panel.querySelector('#glv-range'),
       searchButton: panel.querySelector('#glv-search'),
       stopButton: panel.querySelector('#glv-stop'),
-      // copyGroupButton: panel.querySelector('#glv-copy-group'),
-      // copyExcelButton: panel.querySelector('#glv-copy-excel'),
+      copyGroupButton: panel.querySelector('#glv-copy-group'),
+      copyExcelButton: panel.querySelector('#glv-copy-excel'),
       status: panel.querySelector('#glv-status'),
       summary: panel.querySelector('#glv-summary'),
       result: panel.querySelector('#glv-result'),
@@ -526,8 +526,8 @@
   };
 
   const renderGroups = (ui, groups, resultBarcodeCnt) => {
-    ui.copyGroupButton.disabled = !resultBarcodeCnt;
-    ui.copyExcelButton.disabled = !resultBarcodeCnt;
+    // ui.copyGroupButton.disabled = !resultBarcodeCnt;
+    // ui.copyExcelButton.disabled = !resultBarcodeCnt;
 
     // 1. 상단 요약 텍스트 출력
     // 전체 고정 센터 중 데이터가 존재하는 받는센터의 개수를 구합니다.
