@@ -576,7 +576,7 @@
             <div class="glv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px; background: #1f2937" border-radius: "7px">
               ${barcodeList.map(item => `
                 <div class="glv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-family: monospace; font-size: 12px; padding: 4px 8px;">
-                  <span class="glv-barcode-text" style="color: #555;">${escapeHtml(item.containerBarcode)}</span>
+                  <span class="glv-barcode-text" style="font-weight: bold;">${escapeHtml(item.containerBarcode)}</span>
                   <span class="glv-barcode-count" style="font-weight: bold; color: #e44d26;">${item.rowCount}건</span>
                 </div>
               `).join('')}
