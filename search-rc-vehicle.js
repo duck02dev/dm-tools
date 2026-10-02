@@ -495,7 +495,7 @@
     rows.forEach(row => {
       const fromCenter = row.fromCenter;
       const vehicleNumber = row.vehicleNumber;
-      const containerBarcode = row.containerBarcode || row.toteBarcode;  // 컨테이너 바코드가 없으면 토트 바코드를 사용
+      const containerBarcode = {!row.containerBarcode || row.containerBarcode === '-'} ? row.toteBarcode : row.containerBarcode;  // 컨테이너 바코드가 없으면 토트 바코드를 사용
 
       if (!fromCenter || !vehicleNumber || !containerBarcode) return;
 
