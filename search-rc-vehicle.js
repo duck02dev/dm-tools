@@ -566,9 +566,9 @@
         if (!barcodeList || barcodeList.length === 0) continue;
 
         htmlOutput += `
-          <div class="glv-from-center-block" style="margin-left: 20px; margin-bottom: 15px;">
+          <div class="glv-from-center-block" style="margin-bottom: 15px;">
             <!-- [2계층] 보내는 센터 -->
-            <div class="glv-from-center-title" style="font-weight: bold; font-size: 13px; color: #333; margin-bottom: 6px;">
+            <div class="glv-from-center-title" style="font-weight: bold; font-size: 13px; color: ##FFF; margin-bottom: 6px;">
               ${escapeHtml(fromCenter)}
             </div>
             
