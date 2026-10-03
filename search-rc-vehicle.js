@@ -1,9 +1,8 @@
 (async () => {
   'use strict';
 
-  const APP_VERSION = 'v1.0';
-  const APP_TITLE = `SEARCH RC Vehicle · DUCK02 ${APP_VERSION}`;
-  const DEFAULT_TO_CENTER_CODE = 'DON1CFC';
+  const APP_VERSION = 'v1.1';
+  const APP_TITLE = `재고이관 차량 검색 · duck02 ${APP_VERSION}`;
   const FIXED_TARGET_CENTERS = ['DON1', 'DON1CFC'];
   const DEFAULT_RANGE_DAYS = 3;
   const STATUS_LOAD = 'LOAD';
@@ -12,10 +11,10 @@
   const PAGE_CONCURRENCY = 3;
   const MAX_PAGE = 400;
   const REQUEST_GAP_MS = 180;
-  const PANEL_ID = 'grab-load-vehicle-panel';
-  const STYLE_ID = 'grab-load-vehicle-style';
-  const RUN_KEY = '__grabLoadVehicleRunId';
-  const ABORT_KEY = '__grabLoadVehicleAbortController';
+  const PANEL_ID = 'search-rc-vehicle-panel';
+  const STYLE_ID = 'search-rc-vehicle-style';
+  const RUN_KEY = '__searchRcVehicleRunId';
+  const ABORT_KEY = '__searchRcVehicleAbortController';
 
   const QUICK_RANGES = [
     { value: '1', label: '오늘', days: 1 },
@@ -24,8 +23,6 @@
     { value: '4', label: '4일', days: 4 },
     { value: '5', label: '5일', days: 5 }
   ];
-
-  // const TO_CENTER_OPTIONS = ['DON1CFC', 'DON1'];
 
   const clean = (text) =>
     (text || '')
@@ -93,9 +90,9 @@
       #${PANEL_ID} {
         position: fixed;
         right: 24px;
-        bottom: 24px;
+        top: 24px;
         z-index: 999999;
-        width: 420px;
+        width: 370px;
         max-height: calc(100vh - 48px);
         box-sizing: border-box;
         padding: 16px;
@@ -115,19 +112,19 @@
       #${PANEL_ID} * {
         box-sizing: border-box;
       }
-      #${PANEL_ID} .glv-head {
+      #${PANEL_ID} .srv-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 12px;
         margin-bottom: 12px;
       }
-      #${PANEL_ID} .glv-title {
+      #${PANEL_ID} .srv-title {
         font-weight: 800;
         font-size: 16px;
         line-height: 1.25;
       }
-      #${PANEL_ID} .glv-close {
+      #${PANEL_ID} .srv-close {
         width: 28px;
         height: 28px;
         border: 1px solid #4b5563;
@@ -139,9 +136,21 @@
         line-height: 1;
         cursor: pointer;
       }
-      #${PANEL_ID} .glv-row {
+      #${PANEL_ID} .srv-input-row {
         display: grid;
-        grid-template-columns: 1fr 110px;
+        grid-template-columns: 1fr 70px auto;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      #${PANEL_ID} .srv-summary-row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      #${PANEL_ID} .srv-row {
+        display: grid;
+        grid-template-columns: 1fr 70px auto;
         gap: 8px;
         margin-bottom: 10px;
       }
@@ -166,11 +175,12 @@
         font-size: 13px;
         font-weight: 600;
       }
-      #${PANEL_ID} .glv-actions {
+      #${PANEL_ID} .srv-actions {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
-        margin: 12px 0;
+        align-items: flex-end;
+        margin-top: 20px;
       }
       #${PANEL_ID} button {
         height: 34px;
@@ -188,15 +198,19 @@
         opacity: 0.55;
         cursor: not-allowed;
       }
-      #${PANEL_ID} .glv-primary {
+      #${PANEL_ID} .srv-primary {
         background: #2563eb;
         color: #ffffff;
       }
-      #${PANEL_ID} .glv-secondary {
+      #${PANEL_ID} .srv-secondary {
         background: #374151;
         color: #f9fafb;
       }
-      #${PANEL_ID} .glv-status {
+      #${PANEL_ID} .srv-secondary#srv-stop {
+        background: #CF6679;
+        color: #f9fafb;
+      }
+      #${PANEL_ID} .srv-status {
         min-height: 28px;
         margin: 8px 0;
         padding: 8px 10px;
@@ -207,53 +221,68 @@
         font-weight: 500;
         line-height: 1.4;
       }
-      #${PANEL_ID} .glv-summary {
+      #${PANEL_ID} .srv-summary {
         margin: 10px 0;
         color: #d1d5db;
         font-size: 12px;
         font-weight: 500;
         line-height: 1.35;
       }
-      #${PANEL_ID} .glv-group {
-        margin-top: var(--glv-group-gap, 10px);
-        padding: var(--glv-group-padding, 10px);
+      #${PANEL_ID} #srv-result {
+        text-align: left;
+      }
+      #${PANEL_ID} .srv-to-center-title {
+        font-weight: bold;
+        font-size: 15px;
+        color: #bb86fc;
+        border-bottom: 2px solid #bb86fc;
+        padding-bottom: 4px;
+        margin-bottom: 10px;
+      }
+      #${PANEL_ID} .srv-barcode-count {
+        font-weight: bold;
+        color: #03dac5;
+      }
+      #${PANEL_ID} .srv-group {
+        margin-top: var(--srv-group-gap, 10px);
+        padding: var(--srv-group-padding, 10px);
         border: 1px solid #374151;
         border-radius: 8px;
         background: #0b1220;
       }
-      #${PANEL_ID} .glv-group-head {
+      #${PANEL_ID} .srv-group-head {
         display: flex;
         justify-content: space-between;
         margin-bottom: 8px;
         font-weight: 800;
-        font-size: var(--glv-group-font-size, 14px);
+        font-size: var(--srv-group-font-size, 14px);
         line-height: 1.2;
       }
-      #${PANEL_ID} .glv-count {
+      #${PANEL_ID} .srv-count {
         color: #93c5fd;
-        font-size: var(--glv-count-font-size, 13px);
+        font-size: var(--srv-count-font-size, 13px);
         font-weight: 700;
       }
-      #${PANEL_ID} .glv-vehicles {
+      #${PANEL_ID} .srv-vehicles {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--glv-vehicle-gap, 6px);
+        gap: var(--srv-vehicle-gap, 6px);
       }
-      #${PANEL_ID} .glv-vehicle {
+      #${PANEL_ID} .srv-vehicle {
         display: inline-block;
-        min-width: var(--glv-vehicle-min-width, 50px);
-        padding: var(--glv-vehicle-padding, 5px 8px);
+        min-width: var(--srv-vehicle-min-width, 50px);
+        padding: var(--srv-vehicle-padding, 5px 8px);
         color: #f9fafb;
         text-align: left;
         font-weight: 400;
-        font-size: var(--glv-vehicle-font-size, 15px);
+        font-size: var(--srv-vehicle-font-size, 15px);
         line-height: 1.1;
         letter-spacing: 0;
       }
-      #${PANEL_ID} .glv-vehicle-new {
+      #${PANEL_ID} .srv-vehicle-new {
         color: #fbbf24;
       }
-      #${PANEL_ID} .glv-empty {
+      #${PANEL_ID} .srv-empty {
         padding: 18px 10px;
         border: 1px dashed #4b5563;
         border-radius: 8px;
@@ -275,18 +304,18 @@
     const panel = document.createElement('div');
     panel.id = PANEL_ID;
     panel.innerHTML = `
-      <div class="glv-head">
-        <div class="glv-title">${escapeHtml(APP_TITLE)}</div>
-        <button type="button" class="glv-close" title="닫기">×</button>
+      <div class="srv-head">
+        <div class="srv-title">${escapeHtml(APP_TITLE)}</div>
+        <button type="button" class="srv-close" title="닫기">×</button>
       </div>
-      <div class="glv-row">
+      <div class="srv-input-row">
         <div>
-          <label for="glv-vehicle-number">차량번호</label>
-          <input id="glv-vehicle-number" placeholder="4자리 차량번호 입력" autocomplete="off" />
+          <label for="srv-vehicle-number">차량번호</label>
+          <input id="srv-vehicle-number" placeholder="4자리 차량번호 입력" autocomplete="off" />
         </div>
         <div>
-          <label for="glv-range">기간</label>
-          <select id="glv-range">
+          <label for="srv-range">기간</label>
+          <select id="srv-range">
             ${QUICK_RANGES.map(option => `
               <option value="${option.value}" ${option.days === DEFAULT_RANGE_DAYS ? 'selected' : ''}>
                 ${escapeHtml(option.label)}
@@ -294,33 +323,38 @@
             `).join('')}
           </select>
         </div>
+        <div class="srv-actions" style="align-items: flex-end; margin-top: 20px;">
+          <button type="button" class="srv-primary" id="srv-search">조회</button>
+          <button type="button" class="srv-secondary" id="srv-stop" disabled>중지</button>
+        </div>
       </div>
-      <div class="glv-actions">
-        <button type="button" class="glv-primary" id="glv-search">조회</button>
-        <button type="button" class="glv-secondary" id="glv-stop" disabled>중지</button>
-        <button type="button" class="glv-secondary" id="glv-copy-group" disabled>그룹 복사</button>
-        <button type="button" class="glv-secondary" id="glv-copy-excel" disabled>엑셀용 복사</button>
+      <div class="srv-status" id="srv-status">차량번호 입력 후 조회하세요.</div>
+      <div class="srv-summary-row">
+        <div class="srv-summary" id="srv-summary"></div>
+        <div class="srv-copy-btns">
+          <button type="button" class="srv-secondary" id="srv-copy-group" disabled>바코드 복사</button>
+          <button type="button" class="srv-secondary" id="srv-copy-excel" disabled>엑셀용 복사</button>
+        </div>
       </div>
-      <div class="glv-status" id="glv-status">차량번호 입력 후 조회하세요.</div>
-      <div class="glv-summary" id="glv-summary"></div>
-      <div id="glv-result"></div>
+      
+      <div id="srv-result"></div>
     `;
 
     document.body.appendChild(panel);
 
     return {
       panel,
-      // toCenterInput: panel.querySelector('#glv-to-center'),
-      vehicleNumberInput: panel.querySelector('#glv-vehicle-number'),
-      rangeSelect: panel.querySelector('#glv-range'),
-      searchButton: panel.querySelector('#glv-search'),
-      stopButton: panel.querySelector('#glv-stop'),
-      copyGroupButton: panel.querySelector('#glv-copy-group'),
-      copyExcelButton: panel.querySelector('#glv-copy-excel'),
-      status: panel.querySelector('#glv-status'),
-      summary: panel.querySelector('#glv-summary'),
-      result: panel.querySelector('#glv-result'),
-      closeButton: panel.querySelector('.glv-close')
+      // toCenterInput: panel.querySelector('#srv-to-center'),
+      vehicleNumberInput: panel.querySelector('#srv-vehicle-number'),
+      rangeSelect: panel.querySelector('#srv-range'),
+      searchButton: panel.querySelector('#srv-search'),
+      stopButton: panel.querySelector('#srv-stop'),
+      copyGroupButton: panel.querySelector('#srv-copy-group'),
+      copyExcelButton: panel.querySelector('#srv-copy-excel'),
+      status: panel.querySelector('#srv-status'),
+      summary: panel.querySelector('#srv-summary'),
+      result: panel.querySelector('#srv-result'),
+      closeButton: panel.querySelector('.srv-close')
     };
   };
 
@@ -331,7 +365,6 @@
   const setBusy = (ui, isBusy) => {
     ui.searchButton.disabled = isBusy;
     ui.stopButton.disabled = !isBusy;
-    ui.searchButton.textContent = isBusy ? '조회 중...' : '조회';
   };
 
   const buildListUrl = ({ pageNo, toCenterCode, vehicleNumber, startDate, endDate }) => {
@@ -360,6 +393,51 @@
 
   const fetchHtml = async (url, signal) => {
     await sleep(REQUEST_GAP_MS, signal);
+
+    // 💡 [로컬 테스트용 분기] 현재 접속 주소가 로컬인 경우 실제 fetch를 하지 않고 더미 HTML을 반환합니다.
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      console.log(`[LOCAL TEST] Dummy data returned for URL: ${url}`);
+      
+      // 테스트하고 싶은 WMS 결과 화면의 HTML 테이블 구조를 작성합니다.
+      return `
+        <table>
+          <thead>
+            <tr>
+              <th>보내는센터</th>
+              <th>차량번호</th>
+              <th>컨테이너바코드</th>
+              <th>토트바코드</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>동탄1센터</td>
+              <td>12가3456</td>
+              <td>C-BARCODE-001</td>
+              <td>T-BARCODE-001</td>
+            </tr>
+            <tr>
+              <td>동탄1센터</td>
+              <td>12가3456</td>
+              <td>C-BARCODE-001</td>
+              <td>T-BARCODE-001</td>
+            </tr>
+            <tr>
+              <td>인천4센터</td>
+              <td>12가3456</td>
+              <td>C-BARCODE-002</td>
+              <td>-</td>
+            </tr>
+            <tr>
+              <td>고양3센터</td>
+              <td>12가3456</td>
+              <td>-</td>
+              <td>T-BARCODE-999</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
 
     const response = await fetch(url, {
       method: 'GET',
@@ -542,7 +620,7 @@
 
     // 2. 데이터가 없을 때 예외 처리
     if (!resultBarcodeCnt) {
-      ui.result.innerHTML = '<div class="glv-empty">이동중 차량 정보가 없습니다.</div>';
+      ui.result.innerHTML = '<div class="srv-empty">이동중 차량 정보가 없습니다.</div>';
       return;
     }
 
@@ -554,9 +632,9 @@
       if (fromCenterMap.size === 0) continue;
 
       htmlOutput += `
-        <div class="glv-to-center-block" style="margin-bottom: 20px;">
+        <div class="srv-to-center-block" style="margin-bottom: 20px;">
           <!-- [1계층] 받는센터명 -->
-          <div class="glv-to-center-title" style="font-weight: bold; font-size: 15px; color: #0056b3; border-bottom: 2px solid #0056b3; padding-bottom: 4px; margin-bottom: 10px;">
+          <div class="srv-to-center-title">
             ${escapeHtml(toCenterCode)}
           </div>
       `;
@@ -566,18 +644,18 @@
         if (!barcodeList || barcodeList.length === 0) continue;
 
         htmlOutput += `
-          <div class="glv-from-center-block" style="margin-bottom: 15px;">
+          <div class="srv-from-center-block" style="margin-bottom: 15px;">
             <!-- [2계층] 보내는 센터 -->
-            <div class="glv-from-center-title" style="font-weight: bold; font-size: 13px; color: ##FFF; margin-bottom: 6px;">
+            <div class="srv-from-center-title" style="font-weight: bold; font-size: 13px; color: ##FFF; margin-bottom: 6px;">
               ${escapeHtml(fromCenter)}
             </div>
             
             <!-- [3계층] 컨테이너 바코드 리스트 -->
-            <div class="glv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px; background: #1f2937" border-radius: "7px">
+            <div class="srv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px; background: #1f2937" border-radius: "7px">
               ${barcodeList.map(item => `
-                <div class="glv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-family: monospace; font-size: 12px; padding: 4px 8px;">
-                  <span class="glv-barcode-text" style="font-weight: bold;">${escapeHtml(item.containerBarcode)}</span>
-                  <span class="glv-barcode-count" style="font-weight: bold; color: #e44d26;">${item.rowCount}건</span>
+                <div class="srv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-family: monospace; font-size: 12px; padding: 4px 8px;">
+                  <span class="srv-barcode-text" style="font-weight: bold;">${escapeHtml(item.containerBarcode)}</span>
+                  <span class="srv-barcode-count">${item.rowCount}건</span>
                 </div>
               `).join('')}
             </div>
@@ -666,6 +744,12 @@
   });
 
   ui.vehicleNumberInput.addEventListener('change', clearCurrentResult);
+  ui.vehicleNumberInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      ui.searchButton.click();
+    }
+  });
   ui.rangeSelect.addEventListener('change', clearCurrentResult);
 
   ui.searchButton.addEventListener('click', async () => {
@@ -674,6 +758,13 @@
 
     if (!vehicleNumber) {
       setStatus(ui, '차량번호를 입력하세요.');
+      ui.vehicleNumberInput.focus();
+      return;
+    }
+
+    const isFourDigits = /^\d{4}$/.test(vehicleNumber);
+    if (!isFourDigits) {
+      setStatus(ui, '4자리 숫자를 입력하세요.');
       ui.vehicleNumberInput.focus();
       return;
     }
@@ -741,4 +832,5 @@
   });
 
   clearCurrentResult();
+  ui.vehicleNumberInput.focus();
 })();
