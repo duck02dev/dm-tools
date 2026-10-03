@@ -2,7 +2,7 @@
   'use strict';
 
   const APP_VERSION = 'v1.1';
-  const APP_TITLE = `재고이관 차량 검색 · duck02 ${APP_VERSION}`;
+  const APP_TITLE = `Search RC Vehicle · duck02 ${APP_VERSION}`;
   const FIXED_TARGET_CENTERS = ['DON1', 'DON1CFC'];
   const DEFAULT_RANGE_DAYS = 3;
   const STATUS_LOAD = 'LOAD';
