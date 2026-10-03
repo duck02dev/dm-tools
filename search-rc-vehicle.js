@@ -97,8 +97,8 @@
         box-sizing: border-box;
         padding: 16px;
         overflow: auto;
-        background: #111827;
-        color: #f9fafb;
+        background: #121212;
+        color: #E0E0E0;
         border: 1px solid #374151;
         border-radius: 10px;
         box-shadow: 0 18px 48px rgba(0, 0, 0, 0.38);
@@ -200,7 +200,7 @@
       }
       #${PANEL_ID} .srv-primary {
         background: #2563eb;
-        color: #ffffff;
+        color: #E0E0E0;
       }
       #${PANEL_ID} .srv-secondary {
         background: #374151;
@@ -215,7 +215,7 @@
         margin: 8px 0;
         padding: 8px 10px;
         border-radius: 7px;
-        background: #1f2937;
+        background: #2C2C2C;
         color: #e5e7eb;
         font-size: 12px;
         font-weight: 500;
@@ -420,6 +420,12 @@
               <td>동탄1센터</td>
               <td>12가3456</td>
               <td>C-BARCODE-001</td>
+              <td>T-BARCODE-001</td>
+            </tr>
+            <tr>
+              <td>동탄1센터</td>
+              <td>12가3456</td>
+              <td>C-BARCODE-002</td>
               <td>T-BARCODE-001</td>
             </tr>
             <tr>
@@ -646,15 +652,15 @@
         htmlOutput += `
           <div class="srv-from-center-block" style="margin-bottom: 15px;">
             <!-- [2계층] 보내는 센터 -->
-            <div class="srv-from-center-title" style="font-weight: bold; font-size: 13px; color: ##FFF; margin-bottom: 6px;">
+            <div class="srv-from-center-title" style="font-weight: bold; font-size: 13px; margin-bottom: 6px;">
               ${escapeHtml(fromCenter)}
             </div>
             
             <!-- [3계층] 컨테이너 바코드 리스트 -->
-            <div class="srv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; gap: 4px; background: #1f2937" border-radius: "7px">
+            <div class="srv-barcode-list" style="margin-left: 20px; display: flex; flex-direction: column; background: #2c2c2c; border-radius: 7px;">
               ${barcodeList.map(item => `
-                <div class="srv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-family: monospace; font-size: 12px; padding: 4px 8px;">
-                  <span class="srv-barcode-text" style="font-weight: bold;">${escapeHtml(item.containerBarcode)}</span>
+                <div class="srv-barcode-item" style="display: flex; justify-content: space-between; max-width: 400px; font-size: 12px; padding: 4px 8px;">
+                  <span class="srv-barcode-text">${escapeHtml(item.containerBarcode)}</span>
                   <span class="srv-barcode-count">${item.rowCount}건</span>
                 </div>
               `).join('')}
