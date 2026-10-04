@@ -132,6 +132,7 @@
       #${PANEL_ID} .srv-close {
         width: 28px;
         height: 28px;
+        padding: 0;
         border: 1px solid #4b5563;
         border-radius: 6px;
         background: #1f2937;
