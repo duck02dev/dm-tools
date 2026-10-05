@@ -988,14 +988,12 @@
     setStatus(ui, '엑셀용 형식으로 복사했습니다.');
   });
 
-  ui.vehicleNumberInput.addEventListener('change', clearCurrentResult);
   ui.vehicleNumberInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
       ui.searchButton.click();
     }
   });
-  ui.rangeSelect.addEventListener('change', clearCurrentResult);
 
   ui.searchButton.addEventListener('click', async () => {
     const vehicleNumber = clean(ui.vehicleNumberInput.value);
