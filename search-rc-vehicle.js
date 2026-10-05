@@ -27,7 +27,7 @@
   ];
 
   const clean = (text) =>
-    text?.replace(/\s+/g, ' ') ?? '';
+    text?.trim().replace(/\s+/g, ' ') ?? '';
 
   const getCellValue = (cells, index) => {
     if (index < 0 || !cells) return '';
