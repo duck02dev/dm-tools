@@ -1,7 +1,7 @@
 (async () => {
   'use strict';
 
-  const APP_VERSION = 'v1.2';
+  const APP_VERSION = 'v1.3';
   const APP_TITLE = `Search RC Vehicle · duck02 ${APP_VERSION}`;
   const FIXED_TARGET_CENTERS = ['DON1', 'DON1CFC'];
   const CFC_CENTER = 'DON1CFC';
@@ -350,7 +350,6 @@
 
     return {
       panel,
-      // toCenterInput: panel.querySelector('#srv-to-center'),
       vehicleNumberInput: panel.querySelector('#srv-vehicle-number'),
       rangeSelect: panel.querySelector('#srv-range'),
       searchButton: panel.querySelector('#srv-search'),
@@ -397,206 +396,19 @@
     return url.href;
   };
 
+  /**
+   * WMS 조회 결과 HTML을 가져옵니다.
+   * @param {string} url - WMS 조회 URL
+   * @param {AbortSignal} signal - 중단 신호
+   * @returns {Promise<string>} WMS 조회 결과 HTML 문자열
+   */
   const fetchHtml = async (url, signal) => {
     await sleep(REQUEST_GAP_MS, signal);
 
-    // 💡 [로컬 테스트용 분기] 현재 접속 주소가 로컬인 경우 실제 fetch를 하지 않고 더미 HTML을 반환합니다.
+    // 로컬 테스트 환경에서는 실제 WMS URL 대신 test.html을 사용합니다.
     if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
-      console.log(`[LOCAL TEST] Dummy data returned for URL: ${url}`);
-      
-      // 테스트하고 싶은 WMS 결과 화면의 HTML 테이블 구조를 작성합니다.
-      return `
-        <table>
-          <thead>
-            <tr>
-              <th>보내는센터</th>
-              <th>차량번호</th>
-              <th>컨테이너바코드</th>
-              <th>토트바코드</th>
-              <th>이관계획번호</th>
-              <th>집품/분배수량</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>동탄1센터</td>
-              <td>12가3456</td>
-              <td>C-BARCODE-001</td>
-              <td>T-BARCODE-001</td>
-              <td>RC-PLAN-001</td>
-              <td>2000</td>
-            </tr>
-            <tr>
-              <td>동탄1센터</td>
-              <td>12가3456</td>
-              <td>C-BARCODE-001</td>
-              <td>T-BARCODE-001</td>
-              <td>CROSS_DOCK</td>
-              <td>15</td>
-            </tr>
-            <tr>
-              <td>동탄1센터</td>
-              <td>12가3456</td>
-              <td>C-BARCODE-002</td>
-              <td>T-BARCODE-001</td>
-              <td>RC-PLAN-003</td>
-              <td>2000</td>
-            </tr>
-            <tr>
-              <td>인천4센터</td>
-              <td>12가3456</td>
-              <td>C-BARCODE-002</td>
-              <td>-</td>
-              <td>-</td>
-              <td>12</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>51</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>1002</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>51</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>1002</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>51</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>1002</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>51</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>1002</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>51</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>1002</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>51</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>10</td>
-            </tr>
-            <tr>
-              <td>고양3센터</td>
-              <td>12가3456</td>
-              <td>-</td>
-              <td>T-BARCODE-999</td>
-              <td>-</td>
-              <td>1002</td>
-            </tr>
-          </tbody>
-        </table>
-      `;
+      console.log(`[LOCAL TEST] Original URL bypassed. Fetching test asset instead.`);
+      url = '/search-rc-vehicle-dummy.html'; // Live Server의 루트 디렉토리에 있는 test.html을 바라봅니다.
     }
 
     const response = await fetch(url, {
@@ -609,12 +421,11 @@
       }
     });
 
-    const html = await response.text();
-
     if (!response.ok) {
       throw new Error(`WMS 조회에 실패했습니다. 잠시 후 다시 시도하세요. (${response.status})`);
     }
 
+    const html = await response.text();
     if (html.includes('<input') && html.includes('password')) {
       throw new Error('WMS 로그인이 필요합니다. 새로고침 또는 재로그인 후 다시 실행하세요.');
     }
@@ -622,6 +433,11 @@
     return html;
   };
 
+  /**
+   * WMS 조회 결과 HTML에서 데이터를 파싱하여 행 객체 배열을 생성합니다.
+   * @param {string} html - WMS 조회 결과 HTML 문자열
+   * @returns {Array} 행 객체 배열
+   */
   const parseListRows = (html) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     const tables = [...doc.querySelectorAll('table')];
@@ -677,8 +493,18 @@
       .filter(Boolean);
   };
 
+  /**
+   * 행 객체를 고유하게 식별할 수 있는 키를 생성합니다.
+   * @param {Object} row - 행 객체
+   * @returns {string} 고유 키 문자열
+   */
   const makeRowKey = (row) => row.rowSignature || `${row.fromCenter}|${row.vehicleNumber}|${row.ctBarcode}|${row.toteBarcode}`;
 
+  /**
+   * WMS에서 특정 페이지의 데이터를 조회합니다.
+   * @param {Object} params - 조회 파라미터 객체
+   * @returns {Promise<Object>} 조회 결과 객체 (pageNo, rows)
+   */
   const fetchPageRows = async ({ pageNo, toCenter, vehicleNumber, startDate, endDate, signal }) => {
     const url = buildListUrl({ pageNo, toCenter, vehicleNumber, startDate, endDate });
     console.log(`[${APP_TITLE}] page=${pageNo}`, url);
@@ -691,6 +517,11 @@
     };
   };
 
+  /**
+   * WMS에서 차량번호 기준으로 데이터를 조회하고, 중복 페이지를 제거하여 모든 행을 수집합니다.
+   * @param {Object} params - 조회 파라미터 객체
+   * @returns {Promise<Array>} 수집된 데이터 배열
+   */
   const collectRows = async ({ ui, runId, toCenter, vehicleNumber, startDate, endDate, signal }) => {
     const rows = [];
     const seenPages = new Set();
@@ -736,6 +567,12 @@
     return rows;
   };
 
+  /**
+   * 조회된 데이터를 보내는 센터 기준으로 그룹화하고, 바코드별로 집계합니다.
+   * @param {string} toCenter - 받는 센터 코드
+   * @param {Array} rows - 조회된 데이터 배열
+   * @returns {Array} 그룹화된 데이터 배열
+   */
   const resignRcDataList = (toCenter, rows) => {
     const fromCenterMap = new Map();
 
@@ -803,6 +640,12 @@
     return Array.from(fromCenterMap.values()).sort((a, b) => a.fromCenter.localeCompare(b.fromCenter));
   };
 
+  /**
+   * 데이터를 받는센터 기준으로 그룹화하고, HTML을 생성하여 화면에 출력합니다.
+   * @param {Object} ui - UI 요소 객체
+   * @param {Map<string, Array>} rcDataListByToCenterMap - 받는센터 기준으로 그룹화된 데이터 맵
+   * @param {number} rcDataCnt - 총 데이터 개수
+   */
   const renderGroups = (ui, rcDataListByToCenterMap, rcDataCnt) => {
     ui.copyBarcodeButton.disabled = !rcDataCnt;
     ui.copyExcelButton.disabled = !rcDataCnt;
@@ -869,7 +712,6 @@
 
   /**
    * 컨테이너 바코드만 줄바꿈으로 연결한 텍스트를 생성합니다.
-   * 
    * @param {Map<string, Array>} map 
    * @returns {string}
    */
@@ -878,6 +720,11 @@
       .flatMap(rcDataList => rcDataList.flatMap(rcData => Array.from(rcData.ctBarcodeMap.keys())))
       .join('\n');
 
+  /**
+   * 엑셀용 탭 구분 텍스트를 생성합니다.
+   * @param {Map<string, Array>} map
+   * @returns {string}
+   */
   const buildExcelText = (map) => 
     Array.from(map.values())
       .flatMap(rcDataList => 
@@ -893,7 +740,7 @@
             '',  // 호출시간
             hasLargePallet ? '대량' + rcData.largePalletCnt + 'P' : '',  // 하차시간
             rcData.palletCount,
-            rcData.singleSkuPalletCount,
+            isCfc ? 0 : rcData.singleSkuPalletCount,
             calcTons(rcData.palletCount),
             isCfc ? 'CFC' : '재고이관',
             isCfc || rcData.isCrossDock ? '2층' : '지하'
@@ -941,13 +788,17 @@
     document.body.removeChild(textarea);
   };
 
+  /**
+   * 에러 객체를 받아서 사용자 친화적인 메시지를 반환합니다.
+   * @param {Error} error 
+   * @returns {string}
+   */
   const getFriendlyErrorMessage = (error) => {
     if (isAbortError(error)) {
       return '조회가 중지되었습니다.';
     }
 
     const message = error?.message || String(error);
-
     if (message.includes('Failed to fetch') || message.includes('NetworkError')) {
       return 'WMS 또는 네트워크 연결을 확인하세요.';
     }
@@ -955,10 +806,9 @@
     return message;
   };
 
-  const ui = createPanel();
-  let rcDataListByToCenterMap = new Map();  // 고정 센터들에서 가져온 전체 행 데이터를 저장하는 배열
-  let rcDataCnt = 0;
-
+  /**
+   * 현재 조회 결과를 초기화합니다.
+   */
   const clearCurrentResult = () => {
     rcDataListByToCenterMap = new Map();  // 고정 센터들에서 가져온 전체 행 데이터를 초기화 
     rcDataCnt = 0;
@@ -968,6 +818,11 @@
     ui.copyExcelButton.disabled = true;
     setStatus(ui, '차량번호 입력 후 조회하세요.');
   };
+
+  // Execute the main function to initialize the UI and set up event listeners
+  const ui = createPanel();
+  let rcDataListByToCenterMap = new Map();  // 고정 센터들에서 가져온 전체 행 데이터를 저장하는 배열
+  let rcDataCnt = 0;
 
   ui.closeButton.addEventListener('click', removeExistingPanel);
 
@@ -986,6 +841,11 @@
   ui.copyExcelButton.addEventListener('click', async () => {
     await copyText(buildExcelText(rcDataListByToCenterMap));
     setStatus(ui, '엑셀용 형식으로 복사했습니다.');
+  });
+
+  ui.vehicleNumberInput.addEventListener('focus', () => {
+    ui.vehicleNumberInput.value = '';
+    clearCurrentResult();
   });
 
   ui.vehicleNumberInput.addEventListener('keydown', (event) => {
