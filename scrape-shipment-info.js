@@ -69,7 +69,7 @@
       const ths = row.querySelectorAll('th');
       const tds = row.querySelectorAll('td');
 
-      the.forEach((th, idx) => {
+      ths.forEach((th, idx) => {
         switch (th.innerText.trim()) {
           case '거래처':
             basicInfo.companyName = tds[idx].textContent.split('/').pop().trim();
