@@ -66,17 +66,19 @@
     }
     const infoTable = document.querySelector('table#inputForm');
     [...infoTable.querySelectorAll('tr')].forEach((row, index) => {
-      const header = row.querySelector('th');
-      if (header) {
-        switch (header.textContent.trim()) {
+      const ths = row.querySelectorAll('th');
+      const tds = row.querySelectorAll('td');
+
+      the.forEach((th, idx) => {
+        switch (th.innerText.trim()) {
           case '거래처':
-            basicInfo.companyName = row.querySelector('td').textContent.split('/').pop().trim();
+            basicInfo.companyName = tds[idx].textContent.split('/').pop().trim();
             break;
           case '예약일시':
-            basicInfo.reservationDate = extractReservationDate(row.querySelector('td').textContent.trim());
+            basicInfo.reservationDate = extractReservationDate(tds[idx].textContent.trim());
             break;
           case '팔렛트 수':
-            basicInfo.totalPalletQty = parseInt(row.querySelector('td').textContent.trim(), 10) || 0;
+            basicInfo.totalPalletQty = parseInt(tds[idx].textContent.trim(), 10) || 0;
             break;
         }
       }
