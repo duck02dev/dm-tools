@@ -81,7 +81,7 @@
             basicInfo.totalPalletQty = parseInt(tds[idx].textContent.trim(), 10) || 0;
             break;
         }
-      }
+      });
     });
     return basicInfo;
   };
