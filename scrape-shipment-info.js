@@ -311,6 +311,7 @@
   const getMilkrunId = () => {
     const urlParam = new URLSearchParams(window.location.search);
     return urlParam.get('id');
+  }
 
   const scrapMilkrunPage = () => {
     const basicInfo = scrapeMilkrunBasicInfo();
