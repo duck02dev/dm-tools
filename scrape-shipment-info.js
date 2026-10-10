@@ -203,7 +203,7 @@
    * @returns 
    */
   const assignFloor = (totalPalletQty, fullPalletLoadQty) => {
-    if (!totalPalletQty || !fullPalletLoadQty) return '지하';
+    if ((!totalPalletQty && totalPalletQty !== 0) || (!fullPalletLoadQty && fullPalletLoadQty !== 0)) return '지하';
 
     const SMALL_QTY_THRESHOLD = 12;
     const HIGH_FPL_RATE_THRESHOLD = 0.875;
