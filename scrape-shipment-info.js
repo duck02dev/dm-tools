@@ -302,11 +302,15 @@
         }
       } else {
         result.fullPalletLoadQty = '혼적확인';
-        result.companyName = ''; // FIXME: URL에서 예약번호 가져오기
+        result.companyName = getMilkrunId(); // FIXME: URL에서 예약번호 가져오기
       }
     }
     return result;
   };
+
+  const getMilkrunId = () => {
+    const urlParam = new URLSearchParams(window.location.search);
+    return urlParam.get('id');
 
   const scrapMilkrunPage = () => {
     const basicInfo = scrapeMilkrunBasicInfo();
