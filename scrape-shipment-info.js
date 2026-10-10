@@ -292,9 +292,9 @@
 
     if (cells[0] && cells[2]) {
       const fullPalletLoadQty = parseInt(cells[2].innerText.trim(), 10) || 0;
-      if (cells[0].rowSpan === 1 && fullPalletLoadQty === palletQty) {  // 단일 거래처
+      if (cells[0].rowSpan === rows.length && fullPalletLoadQty === palletQty) {  // 단일 거래처
         result.companyName = cells[0].innerText.split('\n')[0].trim();
-        if (cells[4].rowSpan === 1) {
+        if (cells[0].rowSpan === 1 && cells[4].rowSpan === 1) {
           result.fullPalletLoadQty = fullPalletLoadQty;
           result.skuName = cells[7].innerText.replace(/\n/g, ' ').trim();
         } else {
