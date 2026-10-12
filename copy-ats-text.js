@@ -87,7 +87,7 @@
           let productName = '';
           productNamed.childNodes.forEach(node => {
             if (node.nodeType === Node.TEXT_NODE) {
-              productName += nodes textContent;
+              productName += node.textContent;
             }
           });
 
