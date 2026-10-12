@@ -166,7 +166,7 @@
     if (palletCount > 18) return 'DDT';
     if (palletCount > 12) return '11';
     if (palletCount > 6) return '5';
-    if (palletCount > 3) return '3.5';
+    if (palletCount > 2) return '3.5';
     return '1';
   }
 
