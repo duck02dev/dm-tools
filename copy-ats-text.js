@@ -85,7 +85,7 @@
           const productNameTd = tds[4];
 
           let productName = '';
-          productNamed.childNodes.forEach(node => {
+          productNamedTd.childNodes.forEach(node => {
             if (node.nodeType === Node.TEXT_NODE) {
               productName += node.textContent;
             }
