@@ -96,7 +96,7 @@
             extractProductNames.push(productName);
           }
         }
-      }
+      });
     }
   }
 
