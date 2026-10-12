@@ -98,6 +98,7 @@
         }
       });
     }
+    return extractProductNames;
   }
 
   const main = () => {
