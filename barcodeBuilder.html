@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>바코드 순차 표시</title>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 90%;
+    }
+    .input-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    textarea {
+      width: 90%;
+      height: 300px;
+      background-color: #1e1e1e;
+      color: #00ffcc;
+      border: 1px solid #00ffcc;
+      border-radius: 8px;
+      padding: 10px;
+      resize: none;
+    }
+    .arrow-btn {
+      flex: 0 0 80px;
+      margin: 0 20px;
+      background-color: #00ffcc;
+      color: #121212;
+      border: none;
+      border-radius: 50%;
+      font-size: 32px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      height: 80px;
+      width: 80px;
+    }
+    .arrow-btn:hover {
+      background-color: #00ffaa;
+      transform: scale(1.1);
+    }
+    .barcode-area {
+      flex: 1;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+    .barcode {
+      margin: 20px auto;
+      display: block;
+    }
+    p {
+      color: #ff4081;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- 왼쪽 입력 영역 -->
+    <div class="input-area">
+      <h2>입력 문자열</h2>
+      <textarea id="inputText" placeholder="여기에 여러 줄 문자열 입력"></textarea>
+    </div>
+
+    <!-- 가운데 화살표 버튼 -->
+    <button class="arrow-btn" onclick="nextBarcode()">➜</button>
+
+    <!-- 오른쪽 바코드 영역 -->
+    <div class="barcode-area" id="barcodeContainer">
+      <p>바코드가 여기에 표시됩니다</p>
+    </div>
+  </div>
+
+  <script>
+    let lines = [];
+    let currentIndex = 0;
+
+    function nextBarcode() {
+      if (lines.length === 0) {
+        const text = document.getElementById("inputText").value;
+        lines = text.split("\n").filter(line => line.trim() !== "");
+        currentIndex = 0;
+      } else {
+        currentIndex++;
+      }
+      showCurrentBarcode();
+    }
+
+    function showCurrentBarcode() {
+      const container = document.getElementById("barcodeContainer");
+      container.innerHTML = ""; // 기존 바코드 지우기
+      
+      if (currentIndex < lines.length) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.classList.add("barcode");
+        container.appendChild(svg);
+        JsBarcode(svg, lines[currentIndex], {
+          format: "CODE128",
+          displayValue: true,
+          fontSize: 20,
+          margin: 15,
+          lineColor: "#121212"
+        });
+      } else {
+        container.innerHTML = "<p>🎉 모든 바코드를 다 보여줬습니다 🎉</p>";
+      }
+    }
+
+    // 스페이스바로도 이동 가능
+    document.addEventListener("keydown", function(event) {
+      if (event.code === "Space") {
+        event.preventDefault();
+        nextBarcode();
+      }
+    });
+  </script>
+</body>
+</html>
