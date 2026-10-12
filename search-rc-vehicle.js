@@ -733,7 +733,7 @@
           const hasLargePallet = rcData.largePalletCnt > 0;
 
           const rowCells = [
-            rcData.isCrossDock ? RC_PLAN_CROSS_DOCK : rcData.fromCenter,
+            (!isCfc && rcData.isCrossDock) ? RC_PLAN_CROSS_DOCK : rcData.fromCenter,
             rcData.fromCenter,
             rcData.vehicleNumber,
             '',  // 예약시간
@@ -758,7 +758,7 @@
     if (palletCount > 18) return 'DDT';
     if (palletCount > 12) return '11';
     if (palletCount > 6) return '5';
-    if (palletCount > 3) return '3.5';
+    if (palletCount > 2) return '3.5';
     return '1';
   }
 
