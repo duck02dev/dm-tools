@@ -961,7 +961,30 @@
         textNodes.push(currentNode);
       }
     }
-
+    const escapedTerms = atsProducts.map(term => term.replace(/[-\/\\^\$*+?.()|[\]{}]/g, '\\$&'));
+    const regex = new RegExp(`(${escapedTerms.join('|')})`, 'g');
     
+    // 6. 각 텍스트 노드를 순회하며 매칭되는 단어를 <span> 태그로 치환
+    // 뒤에서부터 순회해야 노드가 쪼개져도 인덱스가 들어지지 않습니다.
+    for (let i textNodes.length - 1; i >= 0; i--) {
+      const node = textNodes[i];
+      const text = node.nodeValue;
+
+      if (regex.test(text)) {
+        // 정규식 위치를 리셋하고 매칭 실행
+        regex.lastIndex = 0;
+        
+        // 안전하게 HTML 요소를 생성하기 위해 임시 div 활용
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = text.replace(regex, '<span class="highlight">\$1</span>');
+        
+        // 기존 텍스트 노드가 있던 자리에 하이라이트된 새 노드들을 삽입
+        while (tempDiv.firstChild) {
+          node.parentNode.insertBefore(tempDiv.firstChild, node);
+        }
+        // 기존 원본 텍스트 노드는 삭제
+        node.parentNode.removeChild(node);
+      }
+    }
   });
 })();
