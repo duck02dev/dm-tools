@@ -940,5 +940,5 @@
 
     const atsTexts = event.clipboardData || window.clipboardData;
     alert(atsTexts);
-  }
+  });
 })();
