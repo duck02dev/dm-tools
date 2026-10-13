@@ -933,7 +933,8 @@
   document.addEventListener('paste', (event) => {
     event.preventDefault();
 
-    const atsTexts = event.clipboardData || window.clipboardData;
+    const clipboardData = event.clipboardData || window.clipboardData;
+    const atsTexts = clipboardData.getData('text');
     alert(atsTexts);
   });
 })();
