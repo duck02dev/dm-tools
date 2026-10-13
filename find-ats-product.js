@@ -935,6 +935,33 @@
 
     const clipboardData = event.clipboardData || window.clipboardData;
     const atsTexts = clipboardData.getData('text');
-    alert(atsTexts);
+    if (!atsTexts) return;
+
+    const atsProducts = atsTexts
+      .split(\(/r/)?\n/)
+      .map(term => term.trim())
+      .filter(term => term.length > 0);
+    if (atsProducts.length === 0) return;
+
+    const containerTable = document.getElementById('truckContainerList');
+    if (!containerTable) return;
+
+    const existingHighlights = containerTable.querySelectorAll('.highlight');
+    existingHighlights.forEach(span => {
+      span.outerHTML = span.textContent;
+    });
+
+    containerTable.normalize();
+
+    const textNodes = [];
+    const walk = document.createTreeWalker(containerTable, NodeFilter.SHOW_TEXT, null, false);
+    let currentNode;
+    while (currentNode = walk.nextNode()) {
+      if (currentNode.nodeValue.trim().length > 0) {
+        textNodes.push(currentNode);
+      }
+    }
+
+    
   });
 })();
