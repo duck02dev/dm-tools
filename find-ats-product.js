@@ -819,11 +819,6 @@
     setStatus(ui, '엑셀용 형식으로 복사했습니다.');
   });
 
-  ui.vehicleNumberInput.addEventListener('focus', () => {
-    ui.vehicleNumberInput.value = '';
-    clearCurrentResult();
-  });
-
   ui.searchButton.addEventListener('click', async () => {
     const atsProducts = clean(ui.vehicleNumberInput.value);
 
