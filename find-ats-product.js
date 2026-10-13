@@ -919,7 +919,7 @@
           qty: getCellInt(cells, 3),
           skus: [{
             name: cells[5].innerText.trim(),
-            qty: getCellInt(cells, 7)]
+            qty: getCellInt(cells, 7)
           }]
         });
       } else if (acc.length > 0) {
