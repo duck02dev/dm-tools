@@ -902,66 +902,43 @@
     }
   });
 
-  const scrapeTruckContainerInfo = () => {
+  const scrapeTruckContainerList = () => {
     const table = document.getElementById('truckContainerList');
     if (!table) return [];
-
-    const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText.trim());
-    const headerIdx = {
-      containerName: headers.indexOf('컨테이너 명'),
-      containerQty: headers.indexOf('컨테이너 수량'),
-      skuQty: headers.indexOf('컨테이너별 수량')
-    }
 
     const ROWSPAN_OFFSET = 4;
 
     const rows = table.querySelectorAll('tbody tr');
 
-    const containerList = Array.from(rows).reduce((acc, row) => {
+    return Array.from(rows).reduce((acc, row) => {
       const cells = row.querySelectorAll('td');
 
-      if (cells.length === headers.length) {
+      if (cells.length === 9) {
         acc.push({
-          name: cells[headerIdx.containerName].innerText.trim(),
-          qty: getCellInt(cells, headerIdx.containerQty),
-          skuQtys: [getCellInt(cells, headerIdx.skuQty)]
+          name: cells[1].innerText.trim(),
+          qty: getCellInt(cells, 3),
+          skus: [{
+            name: cells[5].innerText.trim(),
+            qty: getCellInt(cells, 7)]
+          }]
         });
       } else if (acc.length > 0) {
         const current = acc[acc.length - 1];
         if (current.qty === 1) {
-          current.skuQtys.push(getCellInt(cells, headerIdx.skuQty - ROWSPAN_OFFSET));
+          current.skus.push({
+            name: cells[5 - ROWSPAN_OFFSET].innerText.trim(),
+            qty: getCellInt(cells, 7 - ROWSPAN_OFFSET)
+          });
         }
       }
       return acc;
     }, []);
-
-    const containerInfos = {
-      fullPalletLoadQty: 0,
-      lessPalletLoadQty: 0,
-      largeFullPalletLoadQty: 0,
-      largeLessPalletLoadQty: 0
-    }
-
-    containerList.forEach(({ qty, skuQtys }) => {
-      const isSingleSku = skuQtys.length === 1;
-
-      if (isSingleSku) {
-        containerInfos.fullPalletLoadQty += qty;
-        if (skuQtys[0] > 1000) {
-          containerInfos.largeFullPalletLoadQty += qty;
-        }
-      } else {
-        containerInfos.lessPalletLoadQty++;
-        if (skuQtys.length < 4 && skuQtys.some(q => q > 1000)) {
-          containerInfos.largeLessPalletLoadQty++;
-        }
-      }
-    });
-
-    return containerInfos;
   }
 
+  document.addEventListener('paste', (event) => {
+    event.preventDefault();
 
-  clearCurrentResult();
-  ui.vehicleNumberInput.focus();
+    const atsTexts = event.clipboardData || window.clipboardData;
+    alert(atsTexts);
+  }
 })();
