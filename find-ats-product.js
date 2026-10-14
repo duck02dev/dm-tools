@@ -114,7 +114,7 @@
     const productName = cell.innerText.trim();
 
     const isAts = false;
-    for (const i = 0; i <= atsProducts.length; i++;) {
+    for (let i = 0; i <= atsProducts.length; i++) {
       if (productName === atsProducts[i]) {
         isAts = true;
         cell.innerHTML = '<span class="highlight">' + productName + '</span>';
