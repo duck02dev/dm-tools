@@ -153,7 +153,7 @@
     const clipboardData = event.clipboardData || window.clipboardData;
     const atsTexts = clipboardData.getData('text');
     findAtsProduct(atsTexts);
-  }
+  });
 
   const findAtsProduct = (atsTexts) => {
     if (!atsTexts) return;
@@ -209,7 +209,7 @@
         node.parentNode.removeChild(node);
       }
     }
-  });
+  }
 
   const main = () => {
     injectStyle();
