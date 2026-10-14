@@ -68,6 +68,36 @@
     document.body.removeChild(textarea);
   };
 
+  /**
+   * 화면에 간단한 메시지를 표시합니다.
+   * @param {*} message 메시지
+   */
+  const showToast = (message) => {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.top = '20px';
+    toast.style.right = '20px';
+    toast.style.background = 'rgba(0,0,0,0.7)';
+    toast.style.color = '#E0E0E0';
+    toast.style.padding = '10px 20px';
+    toast.style.borderRadius = '4px';
+    toast.style.fontSize = '14px';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '1';
+    toast.style.transition = 'opacity 1s ease';
+
+    document.body.appendChild(toast);
+
+    // 일정 시간 후 서서히 사라지게 하기
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(toast);
+      }, 1000); // transition 시간과 동일하게 설정
+    }, 2000); // 2초 후 사라지기 시작
+  }
+  
   const scrapeTruckContainerList = (atsProducts) => {
     const table = document.getElementById('truckContainerList');
     if (!table) return [];
@@ -117,12 +147,15 @@
     }
     return isAts;
   }
-
   document.addEventListener('paste', (event) => {
     event.preventDefault();
 
     const clipboardData = event.clipboardData || window.clipboardData;
     const atsTexts = clipboardData.getData('text');
+    findAtsProduct(atsTexts);
+  }
+
+  const findAtsProduct = (atsTexts) => {
     if (!atsTexts) return;
 
     const atsProducts = atsTexts
@@ -178,5 +211,23 @@
     }
   });
 
-  injectStyle();
+  const main = () => {
+    injectStyle();
+
+    window.focus();
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+
+      if (!clipboardText) {
+        showToast('클립보드에 ATS정보가 없습니다');
+        return;
+      }
+      findAtsProduct(clipboardText);
+
+    } catch (error) {
+      showToast('Ctrl+V로 ATS정보를 넣어주세요');
+    }
+  }
+
+  main();
 })();
