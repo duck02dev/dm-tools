@@ -85,7 +85,7 @@
     return Array.from(rows).reduce((acc, row) => {
       const cells = row.querySelectorAll('td');
 
-      const isAts = false;
+      let isAts = false;
       if (cells.length === 9) {
         isAts = findAtsProduct(cells[5], atsProducts);
         acc.push({
