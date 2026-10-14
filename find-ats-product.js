@@ -938,7 +938,7 @@
     if (!atsTexts) return;
 
     const atsProducts = atsTexts
-      .split(\(/\r\)?\n/)
+      .split(/\r?\n/)
       .map(term => term.trim())
       .filter(term => term.length > 0);
     if (atsProducts.length === 0) return;
