@@ -33,21 +33,12 @@
     const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      #${PANEL_ID} .fap-vehicle-new {
-        color: #fbbf24;
-      }
-      #${PANEL_ID} .fap-empty {
-        padding: 18px 10px;
-        border: 1px dashed #4b5563;
+      .highlight {
+        background: yellow;
+        padding: 6px 12px;
         border-radius: 8px;
-        color: #9ca3af;
-        font-size: 12px;
-        font-weight: 500;
-        line-height: 1.4;
-        text-align: center;
       }
     `;
-
     document.head.appendChild(style);
   }; 
 
