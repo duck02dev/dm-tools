@@ -966,7 +966,7 @@
     
     // 6. 각 텍스트 노드를 순회하며 매칭되는 단어를 <span> 태그로 치환
     // 뒤에서부터 순회해야 노드가 쪼개져도 인덱스가 들어지지 않습니다.
-    for (let i textNodes.length - 1; i >= 0; i--) {
+    for (let i = textNodes.length - 1; i >= 0; i--) {
       const node = textNodes[i];
       const text = node.nodeValue;
 
