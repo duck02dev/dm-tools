@@ -137,6 +137,8 @@
       .filter(term => term.length > 0);
     if (atsProducts.length === 0) return;
 
+    scrapeTruckContainerList(atsProducts);
+    
     const containerTable = document.getElementById('truckContainerList');
     if (!containerTable) return;
 
