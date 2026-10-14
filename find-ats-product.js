@@ -113,7 +113,7 @@
   const findAtsProduct = (cell, atsProducts) => {
     const productName = cell.innerText.trim();
 
-    const isAts = false;
+    let isAts = false;
     for (let i = 0; i <= atsProducts.length; i++) {
       if (productName === atsProducts[i]) {
         isAts = true;
