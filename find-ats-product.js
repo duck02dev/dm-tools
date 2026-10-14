@@ -211,7 +211,7 @@
     }
   }
 
-  const main = () => {
+  const main = async () => {
     injectStyle();
 
     window.focus();
