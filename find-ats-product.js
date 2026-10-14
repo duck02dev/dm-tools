@@ -14,6 +14,9 @@
     return clean(cells[index].innerText || cells[index].textContent);
   };
 
+  const getCellInt = (cells, idx) => {
+    return cells[idx] ? (parseInt(cells[idx].innerText.trim(), 10) || 0) : 0;
+  }
 
 
   const isAbortError = (error) => error?.name === 'AbortError';
