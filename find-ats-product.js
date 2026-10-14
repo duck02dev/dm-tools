@@ -152,10 +152,10 @@
 
     const clipboardData = event.clipboardData || window.clipboardData;
     const atsTexts = clipboardData.getData('text');
-    findAtsProduct(atsTexts);
+    findAts(atsTexts);
   });
 
-  const findAtsProduct = (atsTexts) => {
+  const findAts = (atsTexts) => {
     if (!atsTexts) return;
 
     const atsProducts = atsTexts
@@ -222,7 +222,7 @@
         showToast('클립보드에 ATS정보가 없습니다');
         return;
       }
-      findAtsProduct(clipboardText);
+      findAts(clipboardText);
 
     } catch (error) {
       showToast('Ctrl+V로 ATS정보를 넣어주세요');
