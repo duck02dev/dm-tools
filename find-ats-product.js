@@ -74,7 +74,7 @@
     document.body.removeChild(textarea);
   };
 
-  const scrapeTruckContainerList = () => {
+  const scrapeTruckContainerList = (atsProducts) => {
     const table = document.getElementById('truckContainerList');
     if (!table) return [];
 
@@ -85,7 +85,9 @@
     return Array.from(rows).reduce((acc, row) => {
       const cells = row.querySelectorAll('td');
 
+      const isAts = false;
       if (cells.length === 9) {
+        isAts = findAtsProduct(cells[5], atsProducts);
         acc.push({
           name: cells[1].innerText.trim(),
           qty: getCellInt(cells, 3),
@@ -95,6 +97,7 @@
           }]
         });
       } else if (acc.length > 0) {
+        isAts = findAtsProduct(cells[5 - ROWSPAN_OFFSET], atsProducts);
         const current = acc[acc.length - 1];
         if (current.qty === 1) {
           current.skus.push({
@@ -105,6 +108,20 @@
       }
       return acc;
     }, []);
+  }
+
+  const findAtsProduct = (cell, atsProducts) => {
+    const productName = cell.innerText.trim();
+
+    const isAts = false;
+    for (const i = 0; i <= atsProducts.length; i++;) {
+      if (productName === atsProducts[i]) {
+        isAts = true;
+        cell.innerHTML = '<span class="highlight">' + productName + '</span>';
+        break;
+      }
+    }
+    return isAts;
   }
 
   document.addEventListener('paste', (event) => {
