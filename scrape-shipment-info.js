@@ -226,11 +226,11 @@
       result += '단일';
     }
     if (containerInfo.largeFullPalletLoadQty > 0) {
-      if (!result) result += '/';
+      if (result.length > 0) result += '/';
       result += `대량${containerInfo.largeFullPalletLoadQty}P`;
     }
     if (containerInfo.largeLessPalletLoadQty > 0) {
-      if (!result) result += '/';
+      if (result.length > 0) result += '/';
       result += `대량혼${containerInfo.largeLessPalletLoadQty}P`;
     }
     return result.trim();
