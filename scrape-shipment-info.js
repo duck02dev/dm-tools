@@ -1,5 +1,8 @@
 (async () => {
   'use strict';
+  
+  const SMALL_QTY_THRESHOLD = 12;
+  const HIGH_FPL_RATE_THRESHOLD = 0.85;
 
   /**
    * 텍스트를 클립보드에 복사합니다.
@@ -207,9 +210,6 @@
    */
   const assignFloor = (totalPalletQty, fullPalletLoadQty) => {
     if ((!totalPalletQty && totalPalletQty !== 0) || (!fullPalletLoadQty && fullPalletLoadQty !== 0)) return '지하';
-
-    const SMALL_QTY_THRESHOLD = 12;
-    const HIGH_FPL_RATE_THRESHOLD = 0.875;
 
     const palletLoadRate = fullPalletLoadQty / totalPalletQty;
     const isHighFPLRate = palletLoadRate > HIGH_FPL_RATE_THRESHOLD;
