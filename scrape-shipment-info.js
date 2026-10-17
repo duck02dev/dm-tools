@@ -42,7 +42,7 @@
     toast.style.background = 'rgba(0,0,0,0.8)';
     toast.style.color = '#E0E0E0';
     toast.style.padding = '16px 32px';
-    toast.styte.borderRadius = '8px';
+    toast.style.borderRadius = '8px';
     toast.style.fontSize = '18px';
     toast.style.fontWeight = 'bold';
     toast.style.zIndex = '9999';
