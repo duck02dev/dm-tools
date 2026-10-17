@@ -28,21 +28,19 @@
     showToast('ATS 정보를 클립보드에 복사했습니다.')
   };
   
-  /**
-   * 화면에 간단한 메시지를 표시합니다.
-   * @param {*} message 메시지
-   */
   const showToast = (message) => {
     const toast = document.createElement('div');
     toast.textContent = message;
     toast.style.position = 'fixed';
-    toast.style.top = '20px';
-    toast.style.right = '20px';
-    toast.style.background = 'rgba(0,0,0,0.7)';
+    toast.style.top = '50%';
+    toast.style.left = '50%';
+    toast.style.transform = 'translate(-50%, -50%)';
+    toast.style.background = 'rgba(0,0,0,0.8)';
     toast.style.color = '#E0E0E0';
-    toast.style.padding = '10px 20px';
-    toast.style.borderRadius = '4px';
-    toast.style.fontSize = '14px';
+    toast.style.padding = '16px 32px';
+    toast.style.borderRadius = '8px';
+    toast.style.fontSize = '18px';
+    toast.style.fontWeight = 'bold';
     toast.style.zIndex = '9999';
     toast.style.opacity = '1';
     toast.style.transition = 'opacity 1s ease';
@@ -57,7 +55,7 @@
       }, 1000); // transition 시간과 동일하게 설정
     }, 2000); // 2초 후 사라지기 시작
   }
-
+  
   const getAtsText = () => {
     const extractProductNames = [];
     
