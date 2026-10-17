@@ -209,6 +209,17 @@
         node.parentNode.removeChild(node);
       }
     }
+    scrollToElement('truckContainerList');
+  }
+
+  const scrollToElement = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
   }
 
   const main = async () => {
