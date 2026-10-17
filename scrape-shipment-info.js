@@ -221,8 +221,10 @@
   }
 
   const buildUnloadTime = (containerInfo) => {
+    const CHECK_SINGLE_SKU_MIN_QTY =10;
+    
     let result = '';
-    if (containerInfo.isSingleSku) {
+    if (containerInfo.isSingleSku && containerInfo.fullPalletLoadQty >= CHECK_SINGLE_SKU_MIN_QTY) {
       result += '단일';
     }
     if (containerInfo.largeFullPalletLoadQty > 0) {
