@@ -1,9 +1,26 @@
 (async () => {
   'use strict';
+
+  const REMOVE_TERMS = [
+    '영농조합법인',
+    '농업회사법인',
+    '주식회사',
+    '강동지점',
+    '코리아',
+    '(주)',
+    '(유)',
+    '주)',
+  ];
   
   const SMALL_QTY_THRESHOLD = 12;
   const HIGH_FPL_RATE_THRESHOLD = 0.85;
 
+  const normalizeName = (name) => {
+    return REMOVE_TERMS.reduce((result, term) => {
+      return result.replaceAll(term, '').trim();
+    }, name);
+  }
+  
   /**
    * 텍스트를 클립보드에 복사합니다.
    * @param {*} text 
@@ -243,7 +260,7 @@
     const containerInfo = scrapeTruckContainerInfo();
 
     const excelCells = [
-      basicInfo.companyName,
+      normalizeName(basicInfo.companyName),
       '',  // 차량번호
       basicInfo.reservationDate,
       '',  // 호출시간
@@ -330,7 +347,7 @@
     const isSingleSku = basicInfo.palletQty === containerInfo.fullPalletLoadQty;
 
     const excelCells = [
-      containerInfo.companyName,
+      normalizeName(containerInfo.companyName),
       '',  // 차량번호
       basicInfo.reservationDate,
       '',  // 호출시간
