@@ -120,6 +120,7 @@
     }, []);
 
     const containerInfos = {
+      isSingleSku: containerList.length === 1 && containerList[0].skuQtys.length === 1,
       fullPalletLoadQty: 0,
       lessPalletLoadQty: 0,
       largeFullPalletLoadQty: 0,
@@ -219,10 +220,15 @@
 
   const buildUnloadTime = (containerInfo) => {
     let result = '';
+    if (containerInfo.isSingleSku) {
+      result += '단일';
+    }
     if (containerInfo.largeFullPalletLoadQty > 0) {
+      if (!result) result += '/';
       result += `대량${containerInfo.largeFullPalletLoadQty}P`;
     }
     if (containerInfo.largeLessPalletLoadQty > 0) {
+      if (!result) result += '/';
       result += `대량혼${containerInfo.largeLessPalletLoadQty}P`;
     }
     return result.trim();
