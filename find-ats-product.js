@@ -215,11 +215,18 @@
   const scrollToElement = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      const scrollPosition = element.getBoundingClientRect().top + window.scrollY - 50;
-      window.scrollTo({
-        top: scrollPosition,
-        behavior: 'smooth'
-      });
+      const sibling = element.previousElementSibling;
+      if (sibling) {
+        sibling.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth'
+        });
+      } else {
+        element.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth'
+        });
+      }
     }
   }
 
