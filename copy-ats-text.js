@@ -25,8 +25,7 @@
       document.execCommand('copy');
       document.body.removeChild(textarea);
     }
-    showToast('ATS 정보를 클립보드에 복사했습니다.')
-  };
+  }
   
   const showToast = (message) => {
     const toast = document.createElement('div');
@@ -57,7 +56,7 @@
   }
   
   const getAtsText = () => {
-    const extractProductNames = [];
+    const extractProductNames = new Set();
     
     const tables = document.querySelectorAll('table');
     let targetTable = null;
@@ -91,20 +90,21 @@
 
           productName = productName.trim();
           if (productName) {
-            extractProductNames.push(productName);
+            extractProductNames.add(productName);
           }
         }
       });
     }
-    return extractProductNames;
+    return Array.from(extractProductNames);
   }
 
   const main = () => {
     const atsText = getAtsText();
     if (atsText.length > 0) {
       copyText(atsText.join('\n'));
+      showToast('ATS 정보를 클립보드에 복사했습니다.');
     } else {
-      showToast('ATS가 없습니다');
+      showToast('ATS가 없습니다.');
     }
   }
 
