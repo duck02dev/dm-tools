@@ -2,6 +2,8 @@
   'use strict';
 
   const REMOVE_TERMS = [
+    '서부KA지점',
+    '함열식품공장',
     '영농조합법인',
     '농업회사법인',
     '주식회사',
@@ -10,6 +12,8 @@
     '(주)',
     '(유)',
     '주)',
+    '㈜',
+    '㈲',
   ];
   
   const SMALL_QTY_THRESHOLD = 12;
