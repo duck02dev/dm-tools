@@ -278,7 +278,6 @@
       normalizeName(basicInfo.companyName),
       '',  // 차량번호
       basicInfo.reservationDate,
-      getCurrentTime(), // 접수시간
       '',  // 호출시간
       buildUnloadTime(containerInfo),  // 하차시간
       basicInfo.totalPalletQty,
@@ -366,7 +365,6 @@
       normalizeName(containerInfo.companyName),
       '',  // 차량번호
       basicInfo.reservationDate,
-      getCurrentTime(), // 접수시간
       '',  // 호출시간
       isSingleSku ? containerInfo.skuName : '',  // 하차시간
       basicInfo.palletQty,
