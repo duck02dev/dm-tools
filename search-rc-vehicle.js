@@ -82,6 +82,15 @@
     };
   };
 
+  const getCurrentTime = () => {
+    const now= new Date();
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    return `${hours}:${minutes}`;
+  }
+
   const removeExistingPanel = () => {
     window[ABORT_KEY]?.abort();
     document.getElementById(PANEL_ID)?.remove();
@@ -737,6 +746,7 @@
             rcData.fromCenter,
             rcData.vehicleNumber,
             '',  // 예약시간
+            getCurrentTime(), // 접수시간
             '',  // 호출시간
             hasLargePallet ? '대량' + rcData.largePalletCnt + 'P' : '',  // 하차시간
             rcData.palletCount,

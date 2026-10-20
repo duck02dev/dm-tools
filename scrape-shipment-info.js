@@ -261,6 +261,15 @@
     return result.trim();
   }
 
+  const getCurrentTime = () => {
+    const now= new Date();
+
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    return `${hours}:${minutes}`;
+  }
+
   const scrapeTruckPage = () => {
     const basicInfo = scrapeTruckBasicInfo();
     const containerInfo = scrapeTruckContainerInfo();
@@ -269,6 +278,7 @@
       normalizeName(basicInfo.companyName),
       '',  // 차량번호
       basicInfo.reservationDate,
+      getCurrentTime(), // 접수시간
       '',  // 호출시간
       buildUnloadTime(containerInfo),  // 하차시간
       basicInfo.totalPalletQty,
@@ -356,6 +366,7 @@
       normalizeName(containerInfo.companyName),
       '',  // 차량번호
       basicInfo.reservationDate,
+      getCurrentTime(), // 접수시간
       '',  // 호출시간
       isSingleSku ? containerInfo.skuName : '',  // 하차시간
       basicInfo.palletQty,
