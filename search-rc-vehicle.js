@@ -86,7 +86,7 @@
     const now= new Date();
 
     const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const minutes = String(Math.floor(now.getMinutes() / 10) * 10).padStart(2, '0');
     
     return `${hours}:${minutes}`;
   }
