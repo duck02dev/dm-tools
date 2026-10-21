@@ -249,11 +249,15 @@
     return (isHighFPLRate) ? '지하' : '3층';
   }
 
-  const buildUnloadTime = (containerInfo) => {
+  const buildUnloadTime = (containerInfo, isDelay) => {
     const CHECK_SINGLE_SKU_MIN_QTY =10;
     
     let result = '';
+    if (isDelay) {
+      result += RESERVATION_DELAY;
+    }
     if (containerInfo.isSingleSku && containerInfo.fullPalletLoadQty >= CHECK_SINGLE_SKU_MIN_QTY) {
+      if (result.length > 0) result += '/';
       result += '단일';
     }
     if (containerInfo.largeFullPalletLoadQty > 0) {
@@ -279,13 +283,27 @@
   const scrapeTruckPage = () => {
     const basicInfo = scrapeTruckBasicInfo();
     const containerInfo = scrapeTruckContainerInfo();
+
+    let reservationTime = '';
+    let isDelay = false;
+    
+    switch (basicInfo.reservationDate) {
+      case RESERVATION_DELAY:
+        isDelay = true;
+        reservationTime = getCurrentTime();
+        break;
+      case RESERVATION_PREV:
+      case RESERVATION_NEXT:
+      default:
+        reservationTime = basicInfo.reservationDate;
+    }
     
     const excelCells = [
       normalizeName(basicInfo.companyName),
       '',  // 차량번호
-      basicInfo.reservationDate,
+      reservationTime,
       '',  // 호출시간
-      buildUnloadTime(containerInfo),  // 하차시간
+      buildUnloadTime(containerInfo, isDelay),  // 하차시간
       basicInfo.totalPalletQty,
       containerInfo.fullPalletLoadQty,
       calcTons(basicInfo.totalPalletQty),
@@ -366,11 +384,14 @@
     const containerInfo = scrapeMilkrunContainerInfo(basicInfo.palletQty);
 
     const isSingleSku = basicInfo.palletQty === containerInfo.fullPalletLoadQty;
-    
+
+    let infoText = '';
     let reservationTime = '';
+    
     switch (basicInfo.reservationDate) {
       case RESERVATION_PREV:
       case RESERVATION_DELAY:
+        infoText += basicInfo.reservationDate;
         reservationTime = getCurrentTime();
         break;
       case RESERVATION_NEXT:
@@ -379,13 +400,18 @@
       default:
         reservationTime = basicInfo.reservationDate;
     }
+
+    if (isSingleSku) {
+      if (infoText.length > 0) infoText += '/';
+      infoText += containerInfo.skuName;
+    }
     
     const excelCells = [
       normalizeName(containerInfo.companyName),
       '',  // 차량번호
-      basicInfo.reservationDate,
+      reservationTime,
       '',  // 호출시간
-      isSingleSku ? containerInfo.skuName : '',  // 하차시간
+      infoText,  // 하차시간
       basicInfo.palletQty,
       containerInfo.fullPalletLoadQty,
       calcTons(basicInfo.palletQty, basicInfo.truckType),
