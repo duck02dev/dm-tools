@@ -279,7 +279,7 @@
   const scrapeTruckPage = () => {
     const basicInfo = scrapeTruckBasicInfo();
     const containerInfo = scrapeTruckContainerInfo();
-
+    
     const excelCells = [
       normalizeName(basicInfo.companyName),
       '',  // 차량번호
@@ -366,7 +366,20 @@
     const containerInfo = scrapeMilkrunContainerInfo(basicInfo.palletQty);
 
     const isSingleSku = basicInfo.palletQty === containerInfo.fullPalletLoadQty;
-
+    
+    let reservationTime = '';
+    switch (basicInfo.reservationDate) {
+      case RESERVATION_PREV:
+      case RESERVATION_DELAY:
+        reservationTime = getCurrentTime();
+        break;
+      case RESERVATION_NEXT:
+        reservationTime = RESERVATION_NEXT;
+        break;
+      default:
+        reservationTime = basicInfo.reservationDate;
+    }
+    
     const excelCells = [
       normalizeName(containerInfo.companyName),
       '',  // 차량번호
