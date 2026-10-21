@@ -224,18 +224,19 @@
     }
 
     const today = new Date();
-
-    if (today.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
-      return RESERVATION_DELAY;
-    }
     
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     const todayStr = `${year}-${month}-${day}`;
-
-    if (dateStr === todayStr) return timeStr;
+    
     if (dateStr < todayStr) return RESERVATION_PREV;
+    
+    if (today.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
+      return RESERVATION_DELAY;
+    }
+    
+    if (dateStr === todayStr) return timeStr;
     return RESERVATION_NEXT;
   }
 
