@@ -23,6 +23,7 @@
   const RESERVATION_PREV = '전일자';
   const RESERVATION_NEXT = '익일자';
   const RESERVATION_DELAY = '연착';
+  const RESERVATION_DELAY_MS = 30 × 60 × 1000;
   
   const SMALL_QTY_THRESHOLD = 12;
   const HIGH_FPL_RATE_THRESHOLD = 0.85;
@@ -215,12 +216,17 @@
     
     const [dateStr, timeStr] = dateText.split(' ');
 
-    const reservationDate = new Date(dateStr);
+    const reservationDate = new Date(`${dateStr}T${timeStr || '00:00'}`);
     if (isNaN(reservationDate.getTime())) {
       return '';
     }
 
     const today = new Date();
+
+    if (today.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
+      return RESERVATION_DELAY;
+    }
+    
     const year = today.getFullYear();
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
