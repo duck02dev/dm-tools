@@ -4,6 +4,8 @@
   const REMOVE_TERMS = [
     '서부KA지점',
     '유한책임회사',
+    '컨슈머브랜드',
+    '아시아퍼시픽',
     '함열식품공장',
     '영농조합법인',
     '농업회사법인',
@@ -23,7 +25,7 @@
   const RESERVATION_PREV = '전일자';
   const RESERVATION_NEXT = '익일자';
   const RESERVATION_DELAY = '연착';
-  const RESERVATION_DELAY_MS = 30 × 60 × 1000;
+  const RESERVATION_DELAY_MS = 30 * 60 * 1000;
   
   const SMALL_QTY_THRESHOLD = 12;
   const HIGH_FPL_RATE_THRESHOLD = 0.85;
