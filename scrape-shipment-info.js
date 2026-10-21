@@ -8,6 +8,8 @@
     '영농조합법인',
     '농업회사법인',
     '주식회사',
+    '서울지점',
+    'TAMSAA_',
     '유한회사',
     '강동지점',
     '코리아',
@@ -17,6 +19,10 @@
     '㈜',
     '㈲',
   ];
+
+  const RESERVATION_PREV = '전일자';
+  const RESERVATION_NEXT = '익일자';
+  const RESERVATION_DELAY = '연착';
   
   const SMALL_QTY_THRESHOLD = 12;
   const HIGH_FPL_RATE_THRESHOLD = 0.85;
@@ -221,8 +227,8 @@
     const todayStr = `${year}-${month}-${day}`;
 
     if (dateStr === todayStr) return timeStr;
-    if (dateStr < todayStr) return '전일자';
-    return '익일자';
+    if (dateStr < todayStr) return RESERVATION_PREV;
+    return RESERVATION_NEXT;
   }
 
   /**
