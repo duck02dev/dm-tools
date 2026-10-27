@@ -30,6 +30,8 @@
   const SMALL_QTY_THRESHOLD = 12;
   const HIGH_FPL_RATE_THRESHOLD = 0.85;
 
+  const LFP_LOAD_QTY_MIN = 1000;
+
   const normalizeName = (name) => {
     return REMOVE_TERMS.reduce((result, term) => {
       return result.replaceAll(term, '').trim();
@@ -169,7 +171,7 @@
 
       if (isSingleSku) {
         containerInfos.fullPalletLoadQty += qty;
-        if (skuQtys[0] > 1000) {
+        if (skuQtys[0] >= LFP_LOAD_QTY_MIN) {
           containerInfos.largeFullPalletLoadQty += qty;
         }
       } else {
