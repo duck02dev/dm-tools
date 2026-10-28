@@ -43,32 +43,6 @@
   }; 
 
   /**
-   * 텍스트를 클립보드에 복사합니다.
-   * @param {*} text 
-   * @returns 
-   */
-  const copyText = async (text) => {
-    // Use the modern Clipboard API if available
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(text);
-      return;
-    }
-    // Fallback for older browsers
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.left = '-9999px';
-    textarea.style.top = '0';
-    textarea.style.fontSize = '12px'; // Prevent zooming on iOS
-    document.body.appendChild(textarea);
-    textarea.focus();
-    textarea.select();
-    textarea.setSelectionRange(0, 99999); // For mobile devices
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
-  };
-
-  /**
    * 화면에 간단한 메시지를 표시합니다.
    * @param {*} message 메시지
    */
