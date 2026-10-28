@@ -361,7 +361,7 @@
     
     const result = {
       companyName: '',
-      fullPalletLoadQty: '',
+      fullPalletLoadQty: 0,
       skuName: ''
     }
 
