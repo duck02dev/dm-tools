@@ -1,6 +1,8 @@
 (async () => {
   'use strict';
 
+  const STYLE_ID = 'find-ats-style';
+
   const clean = (text) =>
     text?.trim().replace(/\s+/g, ' ') ?? '';
 
