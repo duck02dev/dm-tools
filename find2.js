@@ -100,6 +100,9 @@
           });
         }
       }
+      if (isAts) {
+        row.classList.add('highlight');
+      }
       return acc;
     }, []);
   }
@@ -111,7 +114,6 @@
     for (let i = 0; i <= atsProducts.length; i++) {
       if (productName === atsProducts[i]) {
         isAts = true;
-        cell.classList.add('highlight');
         break;
       }
     }
