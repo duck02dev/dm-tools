@@ -360,8 +360,8 @@
     const rows = table.querySelectorAll('tbody tr');
     
     const result = {
-      companyName: '',
-      fullPalletLoadQty: 0,
+      companyName: getMilkrunId(),
+      fullPalletLoadQty: '혼적확인',
       skuName: ''
     }
 
@@ -376,12 +376,7 @@
         if (cells[0].rowSpan === 1 && cells[4].rowSpan === 1) {
           result.fullPalletLoadQty = fullPalletLoadQty;
           result.skuName = cells[7].innerText.replace(/\n/g, ' ').trim();
-        } else {
-          result.fullPalletLoadQty = '혼적확인';
         }
-      } else {
-        result.fullPalletLoadQty = '혼적확인';
-        result.companyName = getMilkrunId(); // FIXME: URL에서 예약번호 가져오기
       }
     }
     return result;
