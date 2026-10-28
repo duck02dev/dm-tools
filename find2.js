@@ -1,11 +1,6 @@
 (async () => {
   'use strict';
 
-  const APP_VERSION = 'v1.0';
-  const APP_TITLE = `Find ATS Product · duck02 ${APP_VERSION}`;
-  const PANEL_ID = 'find-ats-product-panel';
-  const STYLE_ID = 'find-ats-product-style';
-
   const clean = (text) =>
     text?.trim().replace(/\s+/g, ' ') ?? '';
 
@@ -17,7 +12,6 @@
   const getCellInt = (cells, idx) => {
     return cells[idx] ? (parseInt(cells[idx].innerText.trim(), 10) || 0) : 0;
   }
-
 
   const isAbortError = (error) => error?.name === 'AbortError';
 
@@ -115,7 +109,7 @@
     for (let i = 0; i <= atsProducts.length; i++) {
       if (productName === atsProducts[i]) {
         isAts = true;
-        cell.innerHTML = '<span class="highlight">' + productName + '</span>';
+        cell.classList.add('highlight');
         break;
       }
     }
