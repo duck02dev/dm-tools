@@ -365,6 +365,8 @@
       skuName: ''
     }
 
+    if (!rows[0]) return result;
+
     const cells = rows[0].querySelectorAll('td');
 
     if (cells[0] && cells[2]) {
