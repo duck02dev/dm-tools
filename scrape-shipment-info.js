@@ -396,7 +396,7 @@
     const basicInfo = scrapeMilkrunBasicInfo();
     const containerInfo = scrapeMilkrunContainerInfo(basicInfo.palletQty);
 
-    const isSingleSku = basicInfo.palletQty === containerInfo.fullPalletLoadQty;
+    const isSingleSku = basicInfo.palletQty !== 0 && basicInfo.palletQty === containerInfo.fullPalletLoadQty;
 
     let infoText = '';
     let reservationTime = '';
