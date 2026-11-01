@@ -148,36 +148,56 @@
       .map(term => term.trim())
       .filter(term => term.length > 0);
     if (atsProducts.length === 0) return;
-    
-    const containerTable = document.getElementById('truckContainerList');
-    if (!containerTable) return;
 
+    const atsInfo = document.getElementById('atsInfo');
+    if (atsInfo) {
+      atsInfo.remove();
+    }
+    
     const existingHighlights = containerTable.querySelectorAll('.highlight');
     existingHighlights.forEach(element => {
       element.classList.remove('highlight');
     });
+    
+    const containerTable = document.getElementById('truckContainerList');
+    const containerTitle = containerTable.previousElementSibling;
+
+    if (!containerTable) return;
 
     containerTable.normalize();
-    scrapeTruckContainerList(atsProducts);
+    const containerDatas = scrapeTruckContainerList(atsProducts);
 
-    scrollToElement('truckContainerList');
+    let fclAtsCnt = 0;
+    let lclAtsCnt = 0;
+
+    containerDatas.forEach(data => {
+      if (data.isAts) {
+        if (data.skus.length === 1) {
+          fclAtsCnt += data.qty;
+        } else {
+          lclAtsCnt++;
+        }
+      }
+    });
+
+    let infoTxt = 'ATS가 없습니다';
+    if (fclAtsCnt > 0 || lclAtsCnt > 0) {
+      infoTxt = 'ATS: 완적 ' + fclAtsCnt + 'P, 혼적 ' + lclAtsCnt + 'P';
+    }
+
+    const atsInfoHTML = '<span id="atsInfo">' + infoTxt + '</span>';
+
+    containerTitle.insertAdjacentHTML('afterend', atsInfoHTML);
+
+    scrollToElement(containerTitle);
   }
 
-  const scrollToElement = (id) => {
-    const element = document.getElementById(id);
+  const scrollToElement = (element) => {
     if (element) {
-      const sibling = element.previousElementSibling;
-      if (sibling) {
-        sibling.scrollIntoView({
-          block: 'start',
-          behavior: 'smooth'
-        });
-      } else {
-        element.scrollIntoView({
-          block: 'start',
-          behavior: 'smooth'
-        });
-      }
+      element.scrollIntoView({
+       block: 'start',
+        behavior: 'smooth'
+      });
     }
   }
 
