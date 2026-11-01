@@ -153,8 +153,8 @@
     if (!containerTable) return;
 
     const existingHighlights = containerTable.querySelectorAll('.highlight');
-    existingHighlights.forEach(span => {
-      span.outerHTML = span.textContent;
+    existingHighlights.forEach(element => {
+      element.classList.remove('highlight');
     });
 
     containerTable.normalize();
