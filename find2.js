@@ -153,17 +153,17 @@
     if (atsInfo) {
       atsInfo.remove();
     }
+
+    const containerTable = document.getElementById('truckContainerList');
+    const containerTitle = containerTable.previousElementSibling;
+
+    if (!containerTable) return;
     
     const existingHighlights = containerTable.querySelectorAll('.highlight');
     existingHighlights.forEach(element => {
       element.classList.remove('highlight');
     });
     
-    const containerTable = document.getElementById('truckContainerList');
-    const containerTitle = containerTable.previousElementSibling;
-
-    if (!containerTable) return;
-
     containerTable.normalize();
     const containerDatas = scrapeTruckContainerList(atsProducts);
 
