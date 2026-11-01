@@ -187,7 +187,7 @@
 
     const atsInfoHTML = '<span id="atsInfo">' + infoTxt + '</span>';
 
-    containerTitle.insertAdjacentHTML('afterend', atsInfoHTML);
+    containerTitle.insertAdjacentHTML('beforeend', atsInfoHTML);
 
     scrollToElement(containerTitle);
   }
