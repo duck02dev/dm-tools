@@ -312,6 +312,7 @@
     const excelCells = [
       normalizeName(basicInfo.companyName),
       '',  // 차량번호
+      '',  // 등록시간
       reservationTime,
       '',  // 호출시간
       buildUnloadTime(containerInfo, isDelay),  // 하차시간
@@ -417,6 +418,7 @@
     const excelCells = [
       normalizeName(containerInfo.companyName),
       '',  // 차량번호
+      '',  // 등록시간
       reservationTime,
       '',  // 호출시간
       infoText,  // 하차시간
