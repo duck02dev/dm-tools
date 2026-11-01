@@ -71,9 +71,7 @@
   const scrapeTruckContainerList = (atsProducts) => {
     const table = document.getElementById('truckContainerList');
     if (!table) return [];
-
-    const ROWSPAN_OFFSET = 4;
-
+    
     const rows = table.querySelectorAll('tbody tr');
 
     let currMainRowCells = null;
@@ -89,28 +87,30 @@
           row.classList.add('highlight');
         }
         acc.push({
-          name: cells[1].innerText.trim(),
+          containerName: cells[1].innerText.trim(),
           qty: getCellInt(cells, 3),
+          isAts: isAts,
           skus: [{
             name: cells[5].innerText.trim(),
             qty: getCellInt(cells, 7)
           }]
         });
       } else if (acc.length > 0) {
-        isAts = findAtsProduct(cells[5 - ROWSPAN_OFFSET], atsProducts);
+        isAts = findAtsProduct(cells[1], atsProducts);
+        const currContainer = acc[acc.length - 1];
+        if (currContainer.qty === 1) {
+          currContainer.skus.push({
+            name: cells[1].innerText.trim(),
+            qty: getCellInt(cells, 3)
+          });
+        }
         if (isAts && currMainRowCells) {
+          currContainer.isAts = true;
           currMainRowCells[0].classList.add('highlight');
           currMainRowCells[1].classList.add('highlight');
           currMainRowCells[2].classList.add('highlight');
           currMainRowCells[3].classList.add('highlight');
           row.classList.add('highlight');
-        }
-        const current = acc[acc.length - 1];
-        if (current.qty === 1) {
-          current.skus.push({
-            name: cells[5 - ROWSPAN_OFFSET].innerText.trim(),
-            qty: getCellInt(cells, 7 - ROWSPAN_OFFSET)
-          });
         }
       }
       if (isAts) {
