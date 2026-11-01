@@ -33,6 +33,11 @@
         background: yellow;
         padding: 6px 12px;
         border-radius: 8px;
+      },
+      #atsInfo {
+        margin-left: 10px;
+        font-size: 0.8em;
+        color: red;
       }
     `;
     document.head.appendChild(style);
