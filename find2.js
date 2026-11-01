@@ -76,12 +76,18 @@
 
     const rows = table.querySelectorAll('tbody tr');
 
+    let currMainRowCells = null;
+    
     return Array.from(rows).reduce((acc, row) => {
       const cells = row.querySelectorAll('td');
 
       let isAts = false;
       if (cells.length === 9) {
+        currMainRowCells = cells;
         isAts = findAtsProduct(cells[5], atsProducts);
+        if (isAts) {
+          row.classList.add('highlight');
+        }
         acc.push({
           name: cells[1].innerText.trim(),
           qty: getCellInt(cells, 3),
@@ -92,6 +98,13 @@
         });
       } else if (acc.length > 0) {
         isAts = findAtsProduct(cells[5 - ROWSPAN_OFFSET], atsProducts);
+        if (isAts && currMainRowCells) {
+          currMainRowCells[0].classList.add('highlight');
+          currMainRowCells[1].classList.add('highlight');
+          currMainRowCells[2].classList.add('highlight');
+          currMainRowCells[3].classList.add('highlight');
+          row.classList.add('highlight');
+        }
         const current = acc[acc.length - 1];
         if (current.qty === 1) {
           current.skus.push({
