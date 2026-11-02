@@ -745,7 +745,8 @@
             (!isCfc && rcData.isCrossDock) ? RC_PLAN_CROSS_DOCK : rcData.fromCenter,
             rcData.fromCenter,
             rcData.vehicleNumber,
-            getCurrentTime(), // 접수시간
+            '',  // 등록시간
+            '', // 접수시간
             '',  // 호출시간
             hasLargePallet ? '대량' + rcData.largePalletCnt + 'P' : '',  // 하차시간
             rcData.palletCount,
