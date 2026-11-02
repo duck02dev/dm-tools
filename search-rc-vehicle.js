@@ -748,6 +748,7 @@
             '',  // 등록시간
             '', // 접수시간
             '',  // 호출시간
+            '',  // 하차시간
             hasLargePallet ? '대량' + rcData.largePalletCnt + 'P' : '',  // 하차시간
             rcData.palletCount,
             isCfc ? 0 : rcData.singleSkuPalletCount,
