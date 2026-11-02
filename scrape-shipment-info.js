@@ -315,7 +315,8 @@
       '',  // 등록시간
       reservationTime,
       '',  // 호출시간
-      buildUnloadTime(containerInfo, isDelay),  // 하차시간
+      '',  // 하차시간
+      buildUnloadTime(containerInfo, isDelay),  // 특이사항
       basicInfo.totalPalletQty,
       containerInfo.fullPalletLoadQty,
       calcTons(basicInfo.totalPalletQty),
@@ -421,7 +422,8 @@
       '',  // 등록시간
       reservationTime,
       '',  // 호출시간
-      infoText,  // 하차시간
+      '',  // 하차시간
+      infoText,  // 특이사항
       basicInfo.palletQty,
       containerInfo.fullPalletLoadQty,
       calcTons(basicInfo.palletQty, basicInfo.truckType),
