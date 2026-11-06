@@ -95,7 +95,7 @@
     const atsText = getAtsText();
     if (atsText.length > 0) {
       copyText(atsText.join('\n'));
-      showToast('ATS 정보를 클립보드에 복사했습니다.');
+      showToast(`ATS 정보 ${atsText.length}건을 클립보드에 복사했습니다.`);
     } else {
       showToast('ATS가 없습니다.');
     }
