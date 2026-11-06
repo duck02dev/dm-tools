@@ -77,15 +77,12 @@
       if (tds.length >= 5 && tds[1].textContent.trim() === 'ATS') {
         const productNameTd = tds[4];
 
-        let rawText = Array.from(productNameTd.childNodes)
-          .filter(node => node.nodeType === Node.TEXT_NODE)
-          .map(node => node.textContent)
-          .join('');
+        const cloneTd = productNameTd.cloneNode(true);
 
-        const tempDiv = document.createElement('div');
-        tempDiv.textContent = rawText;
+        const spans = cloneTd.querySelectorAll('span');
+        spans.forEach(span => span.remove());
         
-        const productName = tempDiv.innerText.trim();
+        const productName = cloneTd.innerText.trim();
 
         if (productName) {
           extractProductNames.add(productName);
