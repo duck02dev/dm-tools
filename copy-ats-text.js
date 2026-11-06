@@ -57,41 +57,37 @@
   
   const getAtsText = () => {
     const extractProductNames = new Set();
-    
-    const tables = document.querySelectorAll('table');
-    let targetTable = null;
+    const tables = Array.from(document.querySelectorAll('table'));
 
-    for (let i = 0; i < tables.length; i++) {
-      const firstTh = tables[i].querySelector('thead > tr > th');
+    const tableIndex = tables.findIndex(table => {
+      const firstTh = table.querySelector('thead > tr > th');
+      return firstTh && firstTh.textContent.trim() === '발주번호';
+    });
 
-      if (firstTh && firstTh.textContent.trim() === '발주번호') {
-        if (i + 1 < tables.length) {
-          targetTable = tables[i + 1];
-        }
-        break;
-      }
+    if (tableIndex === -1 || tableIndex + 1 >= tables.length) {
+      return [];
     }
+    
+    const targetTable = tables[tableIndex + 1];
+    const rows = targetTable.querySelectorAll('tbody > tr');
 
-    if (targetTable) {
-      const rows = targetTable.querySelectorAll('tbody > tr');
+    rows.forEach((tr) => {
+      const tds = tr.querySelectorAll('td');
 
-      rows.forEach((tr, index) => {
-        const tds = tr.querySelectorAll('td');
+      if (tds.length >= 5 && tds[1].textContent.trim() === 'ATS') {
+        const productNameTd = tds[4];
 
-        if (tds.length >= 5 && tds[1].textContent.trim() === 'ATS') {
-          const productNameTd = tds[4];
+        let rawProductName = Array.from(productNameTd.childNodes)
+          .filter(node => node.nodeType === Node.TEXT_NODE)
+          .map(node => node.textContent)
+          .join('');
+        const productName = rawProductName
+          .replace(/[\r\n\t]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
 
-          let productName = '';
-          productNameTd.childNodes.forEach(node => {
-            if (node.nodeType === Node.TEXT_NODE) {
-              productName += node.textContent;
-            }
-          });
-
-          productName = productName.trim();
-          if (productName) {
-            extractProductNames.add(productName);
-          }
+        if (productName) {
+          extractProductNames.add(productName);
         }
       });
     }
