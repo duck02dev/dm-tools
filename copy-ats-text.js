@@ -89,8 +89,9 @@
         if (productName) {
           extractProductNames.add(productName);
         }
-      });
-    }
+      }
+    });
+    
     return Array.from(extractProductNames);
   }
 
