@@ -77,14 +77,15 @@
       if (tds.length >= 5 && tds[1].textContent.trim() === 'ATS') {
         const productNameTd = tds[4];
 
-        let rawProductName = Array.from(productNameTd.childNodes)
+        let rawText = Array.from(productNameTd.childNodes)
           .filter(node => node.nodeType === Node.TEXT_NODE)
           .map(node => node.textContent)
           .join('');
-        const productName = rawProductName
-          .replace(/[\r\n\t]/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
+
+        const tempDiv = document.createElement('div');
+        tempDiv.textContent = rawText;
+        
+        const productName = tempDiv.innerText.trim();
 
         if (productName) {
           extractProductNames.add(productName);
