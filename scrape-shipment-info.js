@@ -2,6 +2,7 @@
   'use strict';
 
   const REMOVE_TERMS = [
+    '티비에이치글로벌_',
     '서부KA지점',
     '유한책임회사',
     '컨슈머브랜드',
@@ -402,7 +403,6 @@
       case RESERVATION_PREV:
       case RESERVATION_DELAY:
         infoText += basicInfo.reservationDate;
-        reservationTime = getCurrentTime();
         break;
       case RESERVATION_NEXT:
         reservationTime = RESERVATION_NEXT;
