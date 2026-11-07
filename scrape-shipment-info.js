@@ -2,6 +2,7 @@
   'use strict';
 
   const REMOVE_TERMS = [
+    '주식회사_롯데푸드㈜,
     '티비에이치글로벌_',
     '서부KA지점',
     '유한책임회사',
