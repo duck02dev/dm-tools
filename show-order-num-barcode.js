@@ -7,6 +7,7 @@ javascript:(function() {
       var cells = row.cells;
       if (!cells) return;
       if (cells.length != 10 && cells.length != 6) {
+        if (row) row.visibility = 'collapse';
         return;
       }
       
