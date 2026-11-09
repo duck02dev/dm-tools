@@ -8,7 +8,7 @@ javascript:(function() {
       if (!cells) return;
       if (cells.length != 10 && cells.length != 6) return;
       
-      var orderNumIdx = (cells.length === 6) ? 1 : 4;
+      var orderNumIdx = (cells.length === 6) ? 0 : 4;
       if (cells && cells[orderNumIdx]) {
         var cell = cells[orderNumIdx];
         var orderNum = cell.innerText.split('\n')[0].trim();
