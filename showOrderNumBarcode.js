@@ -1,7 +1,7 @@
 javascript:(function() {
   var columnIndex = 4; // 0부터 시작 (0: 첫 번째 열, 1: 두 번째 열)
   var script = document.createElement('script');
-  script.src = 'https://jsdelivr.net';
+  script.src = 'https://cdn.jsdelivr.net/npm/jsbarcode@3.12.3/dist/JsBarcode.all.min.js';
   script.onload = function() {
     var rows= document.querySelectorAll('table.info-table:nth-of-type(2) tbody tr');
     rows.forEach(function(row) {
