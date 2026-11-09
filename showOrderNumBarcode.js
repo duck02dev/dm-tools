@@ -7,7 +7,7 @@ javascript:(function() {
     rows.forEach(function(row) {
       var cells = row.cells;
       if (cells && cells[columnIndex]) {
-        var cell = cells[columnindex];
+        var cell = cells[columnIndex];
         var orderNum = cell.innerText.split('\n')[0].trim();
 
         if (cell.querySelector('.b-code')) return;
