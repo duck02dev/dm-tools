@@ -6,7 +6,10 @@ javascript:(function() {
     rows.forEach(function(row) {
       var cells = row.cells;
       if (!cells) return;
-      if (cells.length != 10 && cells.length != 6) return;
+      if (cells.length != 10 && cells.length != 6) {
+        row.remove();
+        return;
+      }
       
       var orderNumIdx = (cells.length === 6) ? 0 : 4;
       if (cells && cells[orderNumIdx]) {
