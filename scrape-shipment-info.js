@@ -218,30 +218,34 @@
   };
 
   const extractReservationDate = (dateText) => {
-    if (!dateText) return '';
+    if (!dateText) return { status: '', time: '' };
     
     const [dateStr, timeStr] = dateText.split(' ');
 
-    const reservationDate = new Date(`${dateStr}T${timeStr || '00:00'}`);
+    const reservationDate = new Date(`${dateStr}T00:00`);
     if (isNaN(reservationDate.getTime())) {
-      return '';
+      return { status: '', time: '' };
     }
 
-    const today = new Date();
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
-    const todayStr = `${year}-${month}-${day}`;
-    
-    if (dateStr < todayStr) return RESERVATION_PREV;
-    
-    if (today.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
-      return RESERVATION_DELAY;
+    if (reservationDate < today) {
+      return { status: RESERVATION_PREV, time: timeStr };
+    }
+    if (reservationDate > today) {
+      return { status: RESERVATION_NEXT, time: timeStr };
     }
     
-    if (dateStr === todayStr) return timeStr;
-    return RESERVATION_NEXT;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+
+    reservationDate.setHours(hours, minutes, 0, 0);
+    
+    if (today.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
+      return { status: RESERVATION_DELAY, time: timeStr };
+    }
+    
+    return { status: '', time: timeStr };
   }
 
   /**
