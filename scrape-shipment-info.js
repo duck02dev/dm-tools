@@ -406,16 +406,19 @@
     let infoText = '';
     let reservationTime = '';
     
-    switch (basicInfo.reservationDate) {
+    switch (basicInfo.reservationDate.status) {
       case RESERVATION_PREV:
+        infoText += basicInfo.reservationDate.status;
+        break;
       case RESERVATION_DELAY:
-        infoText += basicInfo.reservationDate;
+        infoText += basicInfo.reservationDate.status;
+        reservationTime = basicInfo.reservationDate.time;
         break;
       case RESERVATION_NEXT:
         reservationTime = RESERVATION_NEXT;
         break;
       default:
-        reservationTime = basicInfo.reservationDate;
+        reservationTime = basicInfo.reservationDate.time;
     }
 
     if (isSingleSku) {
