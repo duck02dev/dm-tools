@@ -241,7 +241,7 @@
 
     reservationDate.setHours(hours, minutes, 0, 0);
     
-    if (today.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
+    if (now.getTime() - reservationDate.getTime() >= RESERVATION_DELAY_MS) {
       return { status: RESERVATION_DELAY, time: timeStr };
     }
     
