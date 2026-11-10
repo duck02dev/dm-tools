@@ -304,15 +304,17 @@
     let reservationTime = '';
     let isDelay = false;
     
-    switch (basicInfo.reservationDate) {
+    switch (basicInfo.reservationDate.status) {
       case RESERVATION_DELAY:
         isDelay = true;
-        reservationTime = getCurrentTime();
+        reservationTime = basicInfo.reservationDate.time;
         break;
       case RESERVATION_PREV:
       case RESERVATION_NEXT:
+        reservationTime = basicInfo.reservationDate.status;
+        break;
       default:
-        reservationTime = basicInfo.reservationDate;
+        reservationTime = basicInfo.reservationDate.time;
     }
     
     const excelCells = [
