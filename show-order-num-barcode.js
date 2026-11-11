@@ -19,8 +19,7 @@ javascript:(function() {
         if (cell.querySelector('.b-code')) return;
         
         if (orderNum && !isNaN(orderNum)) {
-          // cell.insertAdjacentHTML('afterbegin', `<div style="display: flex; flex-direction:column; align-items: center;"><svg class="b-code"></svg></div>`);
-          cell.insertAdjacentHTML('afterbegin', `<svg class="b-code"></svg>`);
+          cell.insertAdjacentHTML('afterbegin', `<div style="display: flex; flex-direction:column; align-items: center;"><svg class="b-code"></svg></div>`);
           try {
             JsBarcode(cell.querySelector('.b-code'), orderNum, {
               format: "CODE128", 
