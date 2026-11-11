@@ -48,7 +48,7 @@ javascript:(function() {
     var btn = document.createElement('button');
     btn.id = 'row-toggle-btn';
     btn.innerText = '전체보기';
-    btn.style.cssText = 'posision:fixed; top:15px; right:15px; z-index:99999; padding:8px 14px; background:#222; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.3);';
+    btn.style.cssText = 'posision:absolute; top:15px; left:80px; z-index:99999; padding:8px 14px; background:#222; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.3);';
     btn.onclick = function() {
       var isHidden = tbody.classList.toggle('hide-extra-row');
       btn.innerText = isHidden ? '전체보기' : '바코드보기';
