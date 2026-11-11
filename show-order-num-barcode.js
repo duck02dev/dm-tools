@@ -19,14 +19,14 @@ javascript:(function() {
         if (cell.querySelector('.b-code')) return;
         
         if (orderNum && !isNaN(orderNum)) {
-          cell.innerHTML= `<div style="display: flex; flex-direction:column; align-items: center;"><svg class="b-code"></svg></div>`;
-          var svg = cell.querySelector('.b-code');
+          // cell.insertAdjacentHTML('afterbegin', `<div style="display: flex; flex-direction:column; align-items: center;"><svg class="b-code"></svg></div>`;
+          cell.insertAdjacentHTML('afterbegin', `<svg class="b-code"></svg>`;
           try {
-            JsBarcode(svg, orderNum, {
+            JsBarcode(cell.querySelector('.b-code'), orderNum, {
               format: "CODE128", 
               width: 1.5, 
               height: 35, 
-              displayValue: true 
+              displayValue: false 
             });
           } catch(e) {}
         }
