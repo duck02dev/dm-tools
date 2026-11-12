@@ -1,11 +1,44 @@
 javascript:(function() {
-  function run() {
-    if (!document.getElementById('toggle-row-style')) {
+  const STYLE_ID = 'toggle-row-style';
+  const HIDE_TBODY_CLS = 'hide-extra-row';
+  const HIDE_TR_CLS = 'extra-row';
+  const TOGGLE_BTN_ID = 'row-toggle-btn';
+  
+  function addStyle() {
+    if (!document.getElementById(STYLE_ID)) {
       var style = document.createElement('style');
-      style.id = 'toggle-row-style';
-      style.innerHTML = '.hide-extra-row tr.extra-row { visibility: collapse; } @media print { #row-toggle-btn { display: none !important; } }';
+      style.id = STYLE_ID;
+      style.innerHTML = `
+        .${HIDE_TBODY_CLS} tr.${HIDE_TR_CLS} {
+          visibility: collapse;
+        }
+        #${TOGGLE_BTN_ID} {
+          position: fixed;
+          top: 15px;
+          left: 80px;
+          z-index: 99999;
+          padding: 8px 14px;
+          background: #222;
+          color: #fff;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 13px;
+          font-weight: bold;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        @media print {
+          #${TOGGLE_BTN_ID} {
+            display: none !important;
+          }
+        }
+        `;
       document.head.appendChild(style);
     }
+  }
+  
+  function run() {
+    addStyle();
 
     var tbody = document.querySelector('table.info-table:nth-of-type(2) tbody');
     if (!tbody) return;
@@ -48,7 +81,6 @@ javascript:(function() {
     var btn = document.createElement('button');
     btn.id = 'row-toggle-btn';
     btn.innerText = '전체 보기';
-    btn.style.cssText = 'position:fixed; top:15px; left:80px; z-index:99999; padding:8px 14px; background:#222; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:13px; font-weight:bold; box-shadow:0 2px 6px rgba(0,0,0,0.3);';
     btn.onclick = function() {
       var isHidden = tbody.classList.toggle('hide-extra-row');
       btn.innerText = isHidden ? '전체 보기' : '바코드만 보기';
