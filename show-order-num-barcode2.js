@@ -43,14 +43,14 @@ javascript:(function() {
     var tbody = document.querySelector('table.info-table:nth-of-type(2) tbody');
     if (!tbody) return;
 
-    tbody.classList.add('HIDE_TBODY_CLS');
+    tbody.classList.add(HIDE_TBODY_CLS);
 
     var rows = tbody.querySelectorAll('tr');
     rows.forEach(function(row) {
       var cells = row.cells;
       if (!cells) return;
       if (cells.length != 10 && cells.length != 6) {
-        row.classList.add('HIDE_TR_CLS');
+        row.classList.add(HIDE_TR_CLS);
         return;
       }
       
