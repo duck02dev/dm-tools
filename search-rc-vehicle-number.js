@@ -17,7 +17,17 @@
   const STYLE_ID = 'search-rc-vehicle-style';
   const RUN_KEY = '__searchRcVehicleRunId';
   const ABORT_KEY = '__searchRcVehicleAbortController';
-
+  const FROM_CENTERS_DEFAULT_LABEL = '전체';
+  const FROM_CENTERS = [
+    { value: '', label: '전체' },
+    { value: 'DAE7', label: 'DAE7' }
+  ];
+  const TO_CENTERS_DEFAULT_LABEL = 'DON1';
+  const TO_CENTERS = [
+    { value: '', label: '전체' },
+    { value: 'DON1', label: 'DON1' },
+    { value: 'DON1CFC', label: 'DON1CFC' }
+  ];
   const QUICK_RANGES = [
     { value: '1', label: '오늘', days: 1 },
     { value: '2', label: '2일', days: 2 },
@@ -325,8 +335,24 @@
       </div>
       <div class="srv-input-row">
         <div>
-          <label for="srv-vehicle-number">차량번호</label>
-          <input id="srv-vehicle-number" placeholder="4자리 차량번호 입력" autocomplete="off" />
+          <label for="srv-from-center">보내는 센터</label>
+          <select id="srv-from-center">
+            ${FROM_CENTERS.map(option => `
+              <option value="${option.value}" ${option.label === FROM_CENTERS_DEFAULT_LABEL ? 'selected' : ''}>
+                ${escapeHtml(option.label)}
+              </option>
+            `).join('')}
+          </select>
+        </div>
+        <div>
+          <label for="srv-to-center">받는 센터</label>
+          <select id="srv-to-center">
+            ${TO_CENTERS.map(option => `
+              <option value="${option.value}" ${option.label === TO_CENTERS_DEFAULT_LABEL ? 'selected' : ''}>
+                ${escapeHtml(option.label)}
+              </option>
+            `).join('')}
+          </select>
         </div>
         <div>
           <label for="srv-range">기간</label>
