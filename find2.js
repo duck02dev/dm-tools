@@ -188,7 +188,8 @@
       infoTxt = 'ATS: 완적 ' + fclAtsCnt + 'P, 혼적 ' + lclAtsCnt + 'P';
     }
 
-    const atsInfoHTML = '<span id="atsInfo">' + infoTxt + '</span>';
+    const copyHTML = `<a href="javascript:void(0);" onclick="showToast(${fclAtsCnt})" style="text-decoration: none; cursor: pointer;" title="ATS내용복사">📋</a>`;
+    const atsInfoHTML = `<span id="atsInfo">${infoTxt}${copyHTML}</span>`;
 
     containerTitle.insertAdjacentHTML('beforeend', atsInfoHTML);
 
