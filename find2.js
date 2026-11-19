@@ -183,12 +183,12 @@
       }
     });
 
-    let infoTxt = 'ATS가 없습니다';
+    let infoTxt = 'ATS없음';
     if (fclAtsCnt > 0 || lclAtsCnt > 0) {
-      infoTxt = 'ATS: 완적 ' + fclAtsCnt + 'P, 혼적 ' + lclAtsCnt + 'P';
+      infoTxt = '완적' + fclAtsCnt + 'P/혼적' + lclAtsCnt + 'P';
     }
 
-    const copyHTML = `<a href="javascript:void(0);" onclick="showToast(${fclAtsCnt})" style="text-decoration: none; cursor: pointer;" title="ATS내용복사">📋</a>`;
+    const copyHTML = `<a href="javascript:void(0);" onclick="showToast(${infoTxt});" style="text-decoration: none; cursor: pointer;" title="ATS내용복사">📋</a>`;
     const atsInfoHTML = `<span id="atsInfo">${infoTxt}${copyHTML}</span>`;
 
     containerTitle.insertAdjacentHTML('beforeend', atsInfoHTML);
